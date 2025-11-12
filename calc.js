@@ -1,4 +1,4 @@
- // ================== Класс дробей ==================
+// ================== Класс дробей ==================
 function gcd(a, b) { return b ? gcd(b, a % b) : a; }
 
 class Fraction {
@@ -115,38 +115,42 @@ function calculateExpression(expr) {
 function evaluateFractionExpression(expr) {
   expr = String(expr || "").trim();
 
-  // обработка скобок
-  while (expr.includes("(")) {
-    const before = expr;
-    expr = expr.replace(/\([^()]+\)/g, (sub) => {
-      const inner = sub.slice(1, -1).trim();
-      const f = evaluateFractionExpression(inner);
-      return f.toString();
-    });
-    if (expr === before) break;
-  }
-
-  expr = expr.replace(/\s+/g, "")
-           .replace(/\+\-/g, "-")
-           .replace(/\-\+/g, "-")
-           .replace(/\-\-/g, "+")
-           .replace(/\+\+/g, "+");
-
-// ВАЖНО: убираем "/" из списка операторов
-const raw = expr.split(/([+\-*÷])/).filter(t => t.length);
-
-const tokens = [];
-for (let i = 0; i < raw.length; i++) {
-  const t = raw[i];
-  if ((t === "+" || t === "-") && (i === 0 || /[+\-*÷]/.test(raw[i - 1]))) {
-    const next = raw[i + 1];
-    tokens.push(t + next);
-    i++;
-  } else {
-    tokens.push(t);
-  }
+  // обработка скобок: каждое выражение внутри скобок вычисляем рекурсивно
+while (expr.includes("(")) {
+  const before = expr;
+  expr = expr.replace(/\([^()]+\)/g, (sub) => {
+    const inner = sub.slice(1, -1).trim();
+    const f = evaluateFractionExpression(inner);
+    // возвращаем строку вида "числитель/знаменатель"
+    return f.num + "/" + f.den;
+  });
+  if (expr === before) break;
 }
 
+
+  // нормализация строки
+  expr = expr.replace(/\s+/g, "")
+             .replace(/\+\-/g, "-")
+             .replace(/\-\+/g, "-")
+             .replace(/\-\-/g, "+")
+             .replace(/\+\+/g, "+")
+             .replace(/÷/g, "/");
+
+  // разбиваем по операторам + - * /
+  const raw = expr.split(/([+\-*\/])/).filter(t => t.length);
+
+  const tokens = [];
+  for (let i = 0; i < raw.length; i++) {
+    const t = raw[i];
+    // обработка унарных + и -
+    if ((t === "+" || t === "-") && (i === 0 || /[+\-*\/]/.test(raw[i - 1]))) {
+      const next = raw[i + 1];
+      tokens.push(t + next);
+      i++;
+    } else {
+      tokens.push(t);
+    }
+  }
 
   if (tokens.length === 0) return new Fraction(0, 1);
 
@@ -159,12 +163,13 @@ for (let i = 0; i < raw.length; i++) {
     if (op === "+") result = result.add(right);
     else if (op === "-") result = result.sub(right);
     else if (op === "*") result = result.mul(right);
-else if (op === "/" || op === "÷") result = result.div(right);
+    else if (op === "/") result = result.div(right);
     else throw new Error("Неизвестный оператор: " + op);
   }
 
   return result;
 }
+
 
 function parseTokenToFraction(str) {
   const s = String(str).trim();
