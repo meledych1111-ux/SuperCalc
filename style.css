@@ -1,0 +1,322 @@
+:root {
+  --bg1: #0f0f1a;
+  --bg2: #1a1a2e;
+  --accent1: #ff6ec7;   /* неоновый розовый */
+  --accent2: #4facfe;   /* бирюзовый */
+  --accent3: #f9d423;   /* жёлтый ретро */
+  --accent4: #c471ed;   /* фиолетовый */
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+}
+
+/* фон */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  color: var(--text);
+}
+
+/* контейнер */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 95vh;
+}
+
+/* вкладки */
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 6px;
+  padding: 8px;
+}
+
+.tab-btn {
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 10px;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: #000;
+  box-shadow: 0 0 20px var(--accent2), 0 0 40px var(--accent1);
+}
+
+/* страницы */
+.tab-page {
+  display: none;
+  padding: 12px;
+}
+.tab-page.active {
+  display: block;
+}
+
+/* экран калькулятора */
+.display {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 24px;
+  text-align: right;
+  color: var(--accent2);
+  box-shadow: inset 0 0 20px rgba(79,172,254,0.3);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* клавиатура */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btn {
+  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1));
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+  min-height: 48px; /* единая высота */
+}
+.btn:active {
+  transform: scale(0.95);
+  background: linear-gradient(145deg, var(--accent3), var(--accent4));
+  color: #000;
+  box-shadow: 0 0 12px var(--accent3);
+}
+
+/* универсальный wide */
+.btn.wide {
+  grid-column: span 4;
+}
+
+/* кнопка переключателя научных функций */
+#toggleSciBtn {
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent4));
+  color: #fff;
+}
+
+/* кнопки функций */
+.func {
+  background: linear-gradient(135deg, var(--accent4), var(--accent1));
+  color: #fff;
+  box-shadow: 0 0 8px var(--accent4);
+  font-size: 14px;
+  padding: 12px;
+  min-height: 48px;
+}
+
+/* кнопки памяти */
+.btn.memory {
+  font-size: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent3), var(--accent4));
+  color: #000;
+  min-height: 48px;
+}
+
+/* операторы */
+.operator {
+  background: linear-gradient(135deg, var(--accent2), var(--accent4));
+  color: #fff;
+  border: none;
+  box-shadow: 0 0 10px var(--accent2);
+}
+
+/* равно */
+.equal {
+  background: linear-gradient(135deg, var(--accent1), var(--accent3));
+  color: #000;
+  border: none;
+  box-shadow: 0 0 12px var(--accent1);
+}
+
+/* очистка */
+.clear {
+  background: linear-gradient(135deg, var(--accent4), var(--accent2));
+  color: #fff;
+  border: none;
+  box-shadow: 0 0 12px var(--accent4);
+}
+
+/* блок научных функций */
+.sci-block {
+  margin-top: 10px;
+  padding: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+}
+.sci-block:not(.hidden) {
+  max-height: 500px;
+  opacity: 1;
+}
+.sci-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.sci-block .btn.func {
+  font-size: 13px;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* панель */
+.panel {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 12px;
+  backdrop-filter: blur(6px);
+}
+
+/* поля ввода */
+.text-input, .num-input {
+  background: rgba(255,255,255,0.05);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 16px;
+  flex: 1;
+  min-width: 100px;
+}
+
+/* история */
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.history-item {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  color: var(--accent1);
+  transition: all 0.3s ease;
+}
+.history-item:hover {
+  background: linear-gradient(135deg, var(--accent2), var(--accent3));
+  color: #000;
+  box-shadow: 0 0 10px var(--accent2);
+}
+
+/* график */
+#graphCanvas {
+  width: 100%;
+  height: 300px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  margin-top: 8px;
+}
+
+/* подсказки */
+.hint {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+.hint code {
+  background: rgba(255,255,255,0.05);
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: var(--accent3);
+}
+
+/* легенда графика */
+.legend {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text);
+}
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+/* справочник правил */
+#rulesContent ul li {
+  margin-bottom: 6px;
+  padding: 6px;
+  border-left: 3px solid var(--accent2);
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+}
+
+/* адаптация под мобильные */
+@media (max-width: 420px) {
+  .display { font-size: 22px; }
+  .btn { font-size: 14px; padding: 12px; }
+
+  /* компактная кнопка переключателя */
+  #toggleSciBtn { 
+    font-size: 12px; 
+    padding: 6px 10px; 
+    border-radius: 8px;
+  }
+
+  /* уменьшенные кнопки памяти */
+  .btn.memory { 
+    font-size: 11px; 
+    padding: 6px; 
+    border-radius: 6px; 
+  }
+
+  /* сетка компактнее */
+  .keypad, .sci-grid { 
+    grid-template-columns: repeat(3, 1fr); 
+  }
+
+  /* уменьшенные панели */
+  .panel { 
+    padding: 10px; 
+    border-radius: 10px; 
+  }
+
+  /* текстовые поля */
+  .text-input, .num-input { 
+    font-size: 14px; 
+    padding: 10px; 
+  }
+
+  /* история */
+  .history-item { 
+    font-size: 13px; 
+    padding: 8px; 
+  }
+}
