@@ -14,8 +14,8 @@ const ASSETS = [
   'physics.js',
   'main.js',
   'manifest.json',
-  'IMG_9787.png',
-  'IMG_9787.png'
+  'icons/IMG_9787.png',
+  'icons/IMG_9787.png'
 ];
 
 // Установка: кэшируем все нужные файлы
