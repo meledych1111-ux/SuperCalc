@@ -1,6 +1,6 @@
 {
   "name": "Мобильный калькулятор PWA",
-  "short_name": "Calc",
+  "short_name": "SuperCalc",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -12,4 +12,3 @@
     { "src": "IMG_9787.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
-
