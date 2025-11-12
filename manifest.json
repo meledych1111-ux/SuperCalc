@@ -9,6 +9,7 @@
   "theme_color": "#4facfe",
   "icons": [
     { "src": "IMG_9787.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "", "sizes": "512x512", "type": "image/png" }
+    { "src": "IMG_9787.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
+
