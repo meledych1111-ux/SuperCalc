@@ -1,4 +1,3 @@
-// ====== Парикмахерский цветовой круг ======
 function drawHairColorWheel() {
   const canvas = document.getElementById("hairColorWheel");
   if (!canvas) return;
