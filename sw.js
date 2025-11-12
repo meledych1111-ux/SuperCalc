@@ -1,4 +1,4 @@
-const CACHE_NAME = 'calc-pwa-v1';
+const CACHE_NAME = 'SuperCalc-pwa-v1';
 const ASSETS = [
   './',
   'index.html',
@@ -14,8 +14,8 @@ const ASSETS = [
   'physics.js',
   'main.js',
   'manifest.json',
-  'icon-192.png',
-  'icon-512.png'
+  'IMG_9787.png',
+  'IMG_9787.png'
 ];
 
 // Установка: кэшируем все нужные файлы
