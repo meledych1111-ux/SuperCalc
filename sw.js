@@ -10,8 +10,10 @@ const ASSETS = [
   'equationsAndColors.js',
   'fractions.js',
   'daysCalc.js',
+  'converter.js',
   'holidays.js',
   'physics.js',
+  'rules.js',
   'main.js',
   'manifest.json',
   'icons/IMG_9787.png'
@@ -40,19 +42,21 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
-      // если есть в кэше — отдаем
       if (cachedResponse) {
         return cachedResponse;
       }
-      // иначе идем в сеть и при успехе кладем в кэш
       return fetch(event.request).then(networkResponse => {
         return caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, networkResponse.clone());
           return networkResponse;
         });
       }).catch(() => {
-        // можно вернуть заглушку, если нужно
+        // Fallback: если офлайн и ресурс не найден
+        if (event.request.destination === 'document') {
+          return caches.match('index.html');
+        }
       });
     })
   );
 });
+
