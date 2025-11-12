@@ -14,7 +14,6 @@ const ASSETS = [
   'physics.js',
   'main.js',
   'manifest.json',
-  'icons/IMG_9787.png',
   'icons/IMG_9787.png'
 ];
 
@@ -37,9 +36,23 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Обработка запросов: сначала сеть, потом кэш
+// Обработка запросов: сначала ищем в кэше, потом в сети
 self.addEventListener('fetch', event => {
   event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
+    caches.match(event.request).then(cachedResponse => {
+      // если есть в кэше — отдаем
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      // иначе идем в сеть и при успехе кладем в кэш
+      return fetch(event.request).then(networkResponse => {
+        return caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        });
+      }).catch(() => {
+        // можно вернуть заглушку, если нужно
+      });
+    })
   );
 });
