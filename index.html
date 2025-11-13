@@ -291,17 +291,18 @@
   </div>
 
   <div class="controls">
-    <label><strong>Фильтр по сезону:</strong></label>
-    <select onchange="highlightBySeason(this.value)">
-      <option value="">— Все сезоны —</option>
-      <option value="весна">Весна</option>
-      <option value="лето">Лето</option>
-      <option value="осень">Осень</option>
-      <option value="зима">Зима</option>
-      <option value="все">Универсальный</option>
-    </div>
-  </div>
+  <label><strong>Фильтр по сезону:</strong></label>
+  <select onchange="highlightBySeason(this.value)">
+    <option value="">— Все сезоны —</option>
+    <option value="весна">Весна</option>
+    <option value="лето">Лето</option>
+    <option value="осень">Осень</option>
+    <option value="зима">Зима</option>
+    <option value="все">Универсальный</option>
+  </select> <!-- 🔥 добавлен закрывающий тег -->
+</div>
 </section>
+
 <!-- Конвертер единиц -->
 <section class="tab-page" id="converter">
   <div class="panel">
