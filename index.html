@@ -252,7 +252,17 @@
       <option value="яркий">Яркий</option>
     </select>
   </div>
-
+<!-- Фильтр по цветотип -->
+<div class="controls">
+  <label for="colortypeFilter"><strong>Фильтр по цветотипу:</strong></label>
+  <select id="colortypeFilter" onchange="highlightByColortype(this.value)">
+    <option value="">— Все цветотипы —</option>
+    <option value="весна">Весна</option>
+    <option value="лето">Лето</option>
+    <option value="осень">Осень</option>
+    <option value="зима">Зима</option>
+  </select>
+</div>
   <!-- Фильтр по сезону -->
   <div class="controls">
     <label for="seasonFilter"><strong>Фильтр по сезону:</strong></label>
