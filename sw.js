@@ -17,6 +17,8 @@ const ASSETS = [
   'holidays.js',
   'physics.js',
   'rules.js',
+  'stylistWheel.js',
+  'tabs.js',
   'main.js',
   'colorwheel.js',
   'manifest.json',
