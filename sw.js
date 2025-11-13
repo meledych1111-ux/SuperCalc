@@ -1,5 +1,5 @@
 // Версия кэша — меняй при каждом обновлении проекта
-const CACHE_NAME = 'SuperCalc-pwa-v2';
+const CACHE_NAME = 'SuperCalc-pwa-v3';
 
 // Список ресурсов для предзагрузки
 const ASSETS = [
@@ -30,11 +30,10 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
   );
-  // сразу активируем новый SW
-  self.skipWaiting();
+  self.skipWaiting(); // сразу активируем новый SW
 });
 
-// Активация: очищаем старые кэши и применяем новый SW
+// Активация: очищаем старые кэши
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -43,27 +42,23 @@ self.addEventListener('activate', event => {
       )
     )
   );
-  // сразу применяем новый SW ко всем вкладкам
-  return self.clients.claim();
+  self.clients.claim(); // применяем новый SW ко всем вкладкам
 });
 
 // Обработка запросов: сначала сеть, потом кэш
 self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request)
-      .then(networkResponse => {
-        // если сеть доступна — обновляем кэш
-        return caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, networkResponse.clone());
-          return networkResponse;
-        });
+      .then(response => {
+        // сеть доступна — обновляем кэш
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        return response;
       })
       .catch(() => {
-        // если офлайн — берём из кэша
-        return caches.match(event.request).then(cachedResponse => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
+        // офлайн — берём из кэша
+        return caches.match(event.request).then(cached => {
+          if (cached) return cached;
           // fallback: если документ не найден — index.html
           if (event.request.destination === 'document') {
             return caches.match('index.html');
