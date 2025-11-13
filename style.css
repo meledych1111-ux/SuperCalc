@@ -320,3 +320,50 @@ body {
     padding: 8px; 
   }
 }
+/* Общие стили для секций */
+.tab-page {
+  margin-bottom: 20px;
+}
+
+/* Канвасы */
+canvas {
+  display: block;
+  margin: 0 auto 15px auto;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+}
+
+.out {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 12px auto;
+  max-width: 420px;
+  color: var(--text);
+  box-shadow: 0 0 12px rgba(255,255,255,0.1);
+}
+.makeup-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0 0;
+}
+.makeup-list li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed rgba(255,255,255,0.2);
+  padding: 4px 0;
+  font-size: 14px;
+}
+.swatch {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #000;
+  border-radius: 6px;
+}
+.swatch-main {
+  box-shadow: 0 0 10px var(--accent1);
+}
+.swatch-contrast {
+  box-shadow: 0 0 10px var(--accent2);
+}
