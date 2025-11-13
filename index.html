@@ -229,11 +229,7 @@
 <!-- Цветовой круг для стилистов -->
 <section class="tab-page" id="stylistWheel">
   <h2>Цветовой круг для стилистов</h2>
-
-  <!-- Сам круг -->
-  <canvas id="stylistColorWheel" width="300" height="300"></canvas>
-
-  <!-- Результаты выбора -->
+  <canvas id="stylistColorWheel"></canvas>
   <div id="stylistColorResult" class="out">—</div>
 
   <!-- Подсказка -->
@@ -248,35 +244,36 @@
     <select id="styleFilter" onchange="highlightByStyle(this.value)">
       <option value="">— Все стили —</option>
       <option value="деловой">Деловой</option>
-      <option value="романтический">Романтический</option>
-      <option value="креативный">Креативный</option>
       <option value="повседневный">Повседневный</option>
+      <option value="вечерний">Вечерний</option>
       <option value="универсальный">Универсальный</option>
-      <option value="базовый">Базовый</option>
+      <option value="контрастный">Контрастный</option>
+      <option value="свежий">Свежий</option>
+      <option value="яркий">Яркий</option>
     </select>
   </div>
 
-  <!-- Фильтр по времени года -->
+  <!-- Фильтр по сезону -->
   <div class="controls">
-    <label for="seasonFilter"><strong>Фильтр по времени года:</strong></label>
+    <label for="seasonFilter"><strong>Фильтр по сезону:</strong></label>
     <select id="seasonFilter" onchange="highlightBySeason(this.value)">
       <option value="">— Все сезоны —</option>
       <option value="весна">Весна</option>
       <option value="лето">Лето</option>
       <option value="осень">Осень</option>
       <option value="зима">Зима</option>
-      <option value="все">Универсальные</option>
+      <option value="все">Универсальный</option>
     </select>
   </div>
 
   <!-- Кнопки схем -->
-  <div class="controls">
-    <strong>Цветовые схемы:</strong><br>
-    <button type="button" onclick="showScheme('analog')">Аналоговая</button>
-    <button type="button" onclick="showScheme('complement')">Комплементарная</button>
-    <button type="button" onclick="showScheme('triad')">Триада</button>
+  <div class="controls" style="margin-top:10px;">
+    <button class="btn func" onclick="showScheme('analog')">Аналоговая</button>
+    <button class="btn func" onclick="showScheme('complement')">Комплементарная</button>
+    <button class="btn func" onclick="showScheme('triad')">Триада</button>
   </div>
 </section>
+
 
 
 <!-- Конвертер единиц -->
