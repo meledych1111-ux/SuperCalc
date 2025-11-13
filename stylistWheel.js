@@ -149,7 +149,86 @@ const colors = [
     makeupSet:{ lips:"Нюдовая", eyes:"Мятные", blush:"Светлые", eyeliner:"Серая", style:"Свежий" }},
   { color:"#fffacd", text:"Лимонный крем", tone:"тёплый", style:"универсальный", season:"все", colortype:"универсальный",
     textureHint:"Хлопок", makeupHint:"Румяна лимонные",
-    makeupSet:{ lips:"Нюдовая", eyes:"Жёлтые", blush:"Светлые", eyeliner:"Коричневая", style:"Яркий" }}
+    makeupSet:{ lips:"Нюдовая", eyes:"Жёлтые", blush:"Светлые", eyeliner:"Коричневая", style:"Яркий" }},
+
+  // 🌑 Тёмные оттенки
+  { color:"#000000", text:"Чёрный", tone:"нейтральный", style:"универсальный", season:"все", colortype:"универсальный",
+    textureHint:"Классика, вечер", makeupHint:"Подводка чёрная",
+    makeupSet:{ lips:"Красная", eyes:"Смоки айс", blush:"Нейтральные", eyeliner:"Чёрная", style:"Классический вечер" }},
+  { color:"#5c0a0a", text:"Тёмно‑бордовый", tone:"тёплый", style:"вечерний", season:"осень", colortype:"осень",
+    textureHint:"Бархат", makeupHint:"Помада бордовая",
+    makeupSet:{ lips:"Бордовая", eyes:"Золотистые", blush:"Тёплые", eyeliner:"Чёрная", style:"Вечерний" }},
+  { color:"#2e0854", text:"Тёмно‑фиолетовый", tone:"холодный", style:"креативный", season:"зима", colortype:"зима",
+    textureHint:"Шёлк", makeupHint:"Тени фиолетовые",
+    makeupSet:{ lips:"Фуксия", eyes:"Фиолетовые", blush:"Холодные", eyeliner:"Чёрная", style:"Креативный" }},
+  { color:"#000033", text:"Тёмно‑синий", tone:"холодный", style:"деловой", season:"зима", colortype:"зима",
+    textureHint:"Атлас", makeupHint:"Тени синие",
+    makeupSet:{ lips:"Красная", eyes:"Синие", blush:"Холодные", eyeliner:"Чёрная", style:"Деловой" }},
+  { color:"#013220", text:"Тёмно‑зелёный", tone:"холодный", style:"универсальный", season:"осень", colortype:"осень",
+    textureHint:"Шерсть", makeupHint:"Тени зелёные",
+    makeupSet:{ lips:"Нюдовая", eyes:"Зелёные", blush:"Тёплые", eyeliner:"Коричневая", style:"Универсальный" }},
+  { color:"#2f2f2f", text:"Графитовый", tone:"нейтральный", style:"универсальный", season:"все", colortype:"универсальный",
+    textureHint:"Трикотаж", makeupHint:"Тени серые",
+    makeupSet:{ lips:"Нюдовая", eyes:"Серые", blush:"Нейтральные", eyeliner:"Чёрная", style:"Базовый" }},
+
+  // 🌈 Яркие оттенки
+  { color:"#ff0000", text:"Ярко‑красный", tone:"тёплый", style:"контрастный", season:"зима", colortype:"зима",
+    textureHint:"Атлас", makeupHint:"Помада красная",
+    makeupSet:{ lips:"Красная", eyes:"Тёмные", blush:"Охра", eyeliner:"Чёрная", style:"Контрастный" }},
+  { color:"#ff6600", text:"Ярко‑оранжевый", tone:"тёплый", style:"креативный", season:"осень", colortype:"осень",
+    textureHint:"Хлопок", makeupHint:"Румяна тёплые",
+    makeupSet:{ lips:"Оранжевая", eyes:"Коричневые", blush:"Тёплые", eyeliner:"Коричневая", style:"Креативный" }},
+  { color:"#ffff00", text:"Ярко‑жёлтый", tone:"тёплый", style:"яркий", season:"весна", colortype:"весна",
+    textureHint:"Хлопок", makeupHint:"Хайлайтер",
+    makeupSet:{ lips:"Нюдовая", eyes:"Жёлтые", blush:"Светлые", eyeliner:"Коричневая", style:"Яркий" }},
+  { color:"#0066ff", text:"Ярко‑синий", tone:"холодный", style:"свежий", season:"лето", colortype:"лето",
+    textureHint:"Шёлк", makeupHint:"Тени синие",
+    makeupSet:{ lips:"Нюдовая", eyes:"Синие", blush:"Светлые", eyeliner:"Чёрная", style:"Свежий" }},
+  { color:"#00ff00", text:"Ярко‑зелёный", tone:"свежий", style:"повседневный", season:"весна", colortype:"весна",
+    textureHint:"Лён", makeupHint:"Тени зелёные",
+    makeupSet:{ lips:"Нюдовая", eyes:"Зелёные", blush:"Светлые", eyeliner:"Коричневая", style:"Повседневный" }},
+  { color:"#ff1493", text:"Ярко‑розовый", tone:"тёплый", style:"романтический", season:"лето", colortype:"лето",
+    textureHint:"Шифон", makeupHint:"Помада розовая",
+    makeupSet:{ lips:"Ярко‑розовая", eyes:"Серебристые", blush:"Розовые", eyeliner:"Чёрная", style:"Романтический" }},
+// 🌑 Дополнительные тёмные
+{ color:"#3b2f2f", text:"Тёмно‑коричневый", tone:"тёплый", style:"деловой", season:"осень", colortype:"осень",
+  textureHint:"Шерсть", makeupHint:"Помада коричневая",
+  makeupSet:{ lips:"Коричневая", eyes:"Коричневые", blush:"Тёплые", eyeliner:"Чёрная", style:"Деловой" }},
+{ color:"#1c1c1c", text:"Угольный", tone:"нейтральный", style:"вечерний", season:"все", colortype:"универсальный",
+  textureHint:"Кожа", makeupHint:"Подводка чёрная",
+  makeupSet:{ lips:"Красная", eyes:"Смоки айс", blush:"Нейтральные", eyeliner:"Чёрная", style:"Вечерний" }},
+{ color:"#045f5f", text:"Тёмно‑бирюзовый", tone:"холодный", style:"креативный", season:"зима", colortype:"зима",
+  textureHint:"Атлас", makeupHint:"Тени бирюзовые",
+  makeupSet:{ lips:"Нюдовая", eyes:"Бирюзовые", blush:"Холодные", eyeliner:"Чёрная", style:"Креативный" }},
+{ color:"#2b3d2f", text:"Тёмно‑хаки", tone:"тёплый", style:"универсальный", season:"осень", colortype:"осень",
+  textureHint:"Лён", makeupHint:"Тени хаки",
+  makeupSet:{ lips:"Нюдовая", eyes:"Хаки", blush:"Тёплые", eyeliner:"Коричневая", style:"Универсальный" }},
+{ color:"#4b1c3f", text:"Тёмно‑бордо‑фиолетовый", tone:"холодный", style:"романтический", season:"зима", colortype:"зима",
+  textureHint:"Бархат", makeupHint:"Помада бордовая",
+  makeupSet:{ lips:"Бордовая", eyes:"Фиолетовые", blush:"Холодные", eyeliner:"Чёрная", style:"Романтический" }},
+{ color:"#4a3c1a", text:"Тёмно‑золотистый", tone:"тёплый", style:"акцентный", season:"осень", colortype:"осень",
+  textureHint:"Металлизированные ткани", makeupHint:"Тени золотые",
+  makeupSet:{ lips:"Красная", eyes:"Золотые", blush:"Тёплые", eyeliner:"Коричневая", style:"Акцентный" }},
+
+// 🌈 Дополнительные яркие
+{ color:"#00f5ff", text:"Ярко‑бирюзовый", tone:"холодный", style:"свежий", season:"лето", colortype:"лето",
+  textureHint:"Шифон", makeupHint:"Тени бирюзовые",
+  makeupSet:{ lips:"Нюдовая", eyes:"Бирюзовые", blush:"Светлые", eyeliner:"Серая", style:"Свежий" }},
+{ color:"#9b30ff", text:"Ярко‑фиолетовый", tone:"холодный", style:"креативный", season:"зима", colortype:"зима",
+  textureHint:"Атлас", makeupHint:"Тени фиолетовые",
+  makeupSet:{ lips:"Фуксия", eyes:"Фиолетовые", blush:"Холодные", eyeliner:"Чёрная", style:"Креативный" }},
+{ color:"#32cd32", text:"Ярко‑лаймовый", tone:"свежий", style:"энергичный", season:"весна", colortype:"весна",
+  textureHint:"Хлопок", makeupHint:"Тени лаймовые",
+  makeupSet:{ lips:"Нюдовая", eyes:"Зелёные", blush:"Светлые", eyeliner:"Коричневая", style:"Энергичный" }},
+{ color:"#dc143c", text:"Ярко‑малиновый", tone:"тёплый", style:"контрастный", season:"лето", colortype:"лето",
+  textureHint:"Шифон", makeupHint:"Помада малиновая",
+  makeupSet:{ lips:"Малиновая", eyes:"Серебристые", blush:"Розовые", eyeliner:"Чёрная", style:"Контрастный" }},
+{ color:"#1e90ff", text:"Ярко‑голубой", tone:"холодный", style:"свежий", season:"лето", colortype:"лето",
+  textureHint:"Шёлк", makeupHint:"Тени голубые",
+  makeupSet:{ lips:"Нюдовая", eyes:"Голубые", blush:"Светлые", eyeliner:"Чёрная", style:"Свежий" }},
+{ color:"#ffd700", text:"Ярко‑золотой", tone:"тёплый", style:"праздничный", season:"осень", colortype:"осень",
+  textureHint:"Металлизированные ткани", makeupHint:"Хайлайтер золотой",
+  makeupSet:{ lips:"Красная", eyes:"Золотые", blush:"Тёплые", eyeliner:"Чёрная", style:"Праздничный" }}
 ];
 
 
@@ -212,7 +291,8 @@ function drawStylistColorWheel() {
   const ctx = canvas.getContext("2d");
 
   const dpr = window.devicePixelRatio || 1;
-  const cssW = 420, cssH = 420;
+  const cssW = 450, cssH = 450
+;
   canvas.width = cssW * dpr;
   canvas.height = cssH * dpr;
   canvas.style.width = cssW + "px";
@@ -303,6 +383,20 @@ function highlightByColortype(type) {
   const { ctx, cx, cy, radius, step } = canvas._renderParams;
   renderWheel(ctx, cx, cy, radius, step, lastChosenIndex);
 }
+// 🔥 вспомогательная функция
+
+function shadeColor(color, percent) {
+  let f = parseInt(color.slice(1),16),
+      t = percent < 0 ? 0 : 255,
+      p = percent < 0 ? percent*-1 : percent,
+      R = f>>16,
+      G = f>>8&0x00FF,
+      B = f&0x0000FF;
+  return "#" + (0x1000000 + 
+    (Math.round((t-R)*p/100)+R)*0x10000 + 
+    (Math.round((t-G)*p/100)+G)*0x100 + 
+    (Math.round((t-B)*p/100)+B)).toString(16).slice(1);
+}
 
 // Схемы
 function showScheme(type) {
@@ -310,6 +404,7 @@ function showScheme(type) {
   if (!result || lastChosenIndex === null) return;
 
   let schemeColors = [];
+
   if (type === "analog") {
     schemeColors = [
       colors[(lastChosenIndex - 1 + colors.length) % colors.length],
@@ -321,24 +416,84 @@ function showScheme(type) {
       colors[lastChosenIndex],
       colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
     ];
+} else if (type === "accentComplement") {
+  schemeColors = [
+    colors[lastChosenIndex],
+    colors[(lastChosenIndex - 1 + colors.length) % colors.length],
+    colors[(lastChosenIndex + 1) % colors.length],
+    colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
+  ];
   } else if (type === "triad") {
     schemeColors = [
       colors[lastChosenIndex],
       colors[(lastChosenIndex + Math.floor(colors.length / 3)) % colors.length],
       colors[(lastChosenIndex + 2 * Math.floor(colors.length / 3)) % colors.length]
     ];
+  } else if (type === "splitComplement") {
+    schemeColors = [
+      colors[lastChosenIndex],
+      colors[(lastChosenIndex + Math.floor(colors.length / 2) - 1 + colors.length) % colors.length],
+      colors[(lastChosenIndex + Math.floor(colors.length / 2) + 1) % colors.length]
+    ];
+  } else if (type === "tetradic") {
+    schemeColors = [
+      colors[lastChosenIndex],
+      colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length],
+      colors[(lastChosenIndex + Math.floor(colors.length / 4)) % colors.length],
+      colors[(lastChosenIndex + Math.floor(3 * colors.length / 4)) % colors.length]
+    ];
+} else if (type === "dyad") {
+  // Диада: два цвета через 180° ±30°
+  schemeColors = [
+    colors[lastChosenIndex],
+    colors[(lastChosenIndex + Math.floor(colors.length / 2) - Math.floor(colors.length / 12) + colors.length) % colors.length],
+    colors[(lastChosenIndex + Math.floor(colors.length / 2) + Math.floor(colors.length / 12)) % colors.length]
+  ];
+} else if (type === "neutral") {
+  // Нейтральная: выбранный цвет + серые/бежевые тона
+  const base = colors[lastChosenIndex];
+  schemeColors = [
+    base,
+    { ...base, color: "#808080", text: "Нейтральный серый" },
+    { ...base, color: "#c0c0c0", text: "Светло‑серый" },
+    { ...base, color: "#d2b48c", text: "Бежевый" }
+  ];
+    } else if (type === "monochrome") {
+    const base = colors[lastChosenIndex];
+    schemeColors = [
+      base,
+      { ...base, color: shadeColor(base.color, -30), text: base.text + " (тёмный оттенок)" },
+      { ...base, color: shadeColor(base.color, 30), text: base.text + " (светлый оттенок)" }
+    ];
+  } else if (type === "alsoGood") {
+    // Автоматически выбираем соседние сегменты ±2
+    schemeColors = [
+      colors[lastChosenIndex],
+      colors[(lastChosenIndex + 2) % colors.length],
+      colors[(lastChosenIndex - 2 + colors.length) % colors.length]
+    ];
+  } else if (type === "notGood") {
+    // Автоматически выбираем конфликтные сегменты (±90°)
+    schemeColors = [
+      colors[lastChosenIndex],
+      colors[(lastChosenIndex + Math.floor(colors.length / 4)) % colors.length],
+      colors[(lastChosenIndex - Math.floor(colors.length / 4) + colors.length) % colors.length]
+    ];
   } else {
     return;
   }
 
+  // ✅ единый вывод результата
   result.innerHTML = `
     <div style="display:flex;gap:8px;margin-bottom:6px;">
       ${schemeColors.map(c => `<div style="width:30px;height:30px;background:${c.color};border:1px solid #000;"></div>`).join("")}
     </div>
-    <strong>Схема (${type}):</strong> ${schemeColors.map(c => c.text + " (" + c.tone + ", " + c.style + ", " + c.season + ", " + c.colortype + ")").join(", ")}<br>
+    <strong>Схема (${type}):</strong> 
+    ${schemeColors.map(c => c.text + " (" + c.tone + ", " + c.style + ", " + c.season + ", " + c.colortype + ")").join(", ")}<br>
     <em>Подсказки:</em> ${schemeColors.map(c => c.textureHint).join(" | ")}
   `;
 }
 
 // Инициализация после загрузки
 window.addEventListener("load", drawStylistColorWheel);
+
