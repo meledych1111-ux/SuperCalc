@@ -367,3 +367,29 @@ canvas {
 .swatch-contrast {
   box-shadow: 0 0 10px var(--accent2);
 }
+/* Панель кнопок схем */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+/* Кнопки схем */
+.btn.func {
+  flex: 1 1 auto;
+  min-width: 90px;       /* компактная минимальная ширина */
+  padding: 6px 10px;     /* уменьшенные отступы */
+  font-size: 13px;       /* компактный шрифт */
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.btn.func:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateY(-1px);
+}
