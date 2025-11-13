@@ -230,7 +230,39 @@ const colors = [
   textureHint:"Металлизированные ткани", makeupHint:"Хайлайтер золотой",
   makeupSet:{ lips:"Красная", eyes:"Золотые", blush:"Тёплые", eyeliner:"Чёрная", style:"Праздничный" }}
 ];
-
+// Справочник схем
+const schemeInfo = {
+  analog:{name:"Аналоговая",description:"Соседние цвета на круге, мягкая гармония.",makeup:"Дневные тени, нюдовые губы."},
+  complement:{name:"Комплементарная",description:"Противоположные цвета, яркий контраст.",makeup:"Подчёркивание глаз."},
+  triad:{name:"Триада",description:"Три цвета через равные промежутки.",makeup:"Яркий вечерний макияж."},
+  splitComplement:{name:"Split Complement",description:"Основной цвет + два соседних к противоположному.",makeup:"Мягкий контраст."},
+  tetradic:{name:"Тетрада",description:"Два комплементарных набора.",makeup:"Креативные образы."},
+  monochrome:{name:"Монохроматическая",description:"Один цвет и его оттенки.",makeup:"Smoky eyes, нюдовые губы."},
+  accentComplement:{name:"Акцентная комплементарная",description:"Аналоговая база + противоположный акцент.",makeup:"Яркая подводка."},
+  dyad:{name:"Диада",description:"Два цвета через 180° ±30°.",makeup:"Мягкий контраст."},
+  neutral:{name:"Нейтральная",description:"Основной цвет + серые/бежевые тона.",makeup:"Офисный стиль."},
+  tonal:{name:"Тональная",description:"Один цвет + вариации по насыщенности.",makeup:"Розовые губы."},
+  splitTriad:{name:"Мягкая триада",description:"Основной цвет + два соседних к комплементу.",makeup:"Мягкий вариант триады."},
+  pentadic:{name:"Пентада",description:"Пять цветов через равные промежутки.",makeup:"Сценический макияж."},
+  accentTriad:{name:"Акцентная триада",description:"Два соседних цвета + противоположный акцент.",makeup:"Яркие губы."},
+  contrastAnalogous:{name:"Контрастная аналогия",description:"Соседние цвета + один контрастный.",makeup:"Тени с акцентом."},
+  tintedComplement:{name:"Tinted Complement",description:"Основной цвет + комплемент в разных насыщенностях.",makeup:"Зелёный + красно-коричневый."},
+  alsoGood:{name:"Подходящие",description:"Дополнительные гармоничные оттенки.",makeup:"Быстрый выбор."},
+  notGood:{name:"Неподходящие",description:"Конфликтные сочетания.",makeup:"Избегать."}
+};
+// Вспомогательная функция для изменения яркости
+function shadeColor(color, percent) {
+  let f = parseInt(color.slice(1),16),
+      t = percent < 0 ? 0 : 255,
+      p = Math.abs(percent),
+      R = f>>16,
+      G = f>>8&0x00FF,
+      B = f&0x0000FF;
+  return "#" + (0x1000000 +
+    (Math.round((t-R)*p/100)+R)*0x10000 +
+    (Math.round((t-G)*p/100)+G)*0x100 +
+    (Math.round((t-B)*p/100)+B)).toString(16).slice(1);
+}
 
 // Рендер круга с возможностью подсветки выбранного сегмента
 function renderWheel(ctx, cx, cy, radius, step, highlightIndex = null) {
@@ -400,132 +432,145 @@ function shadeColor(color, percent) {
 
 // Схемы
 function showScheme(type) {
-  const result = document.getElementById("stylistColorResult");
+  const result = document.getElementById("schemeGuide");
   if (!result || lastChosenIndex === null) return;
 
   let schemeColors = [];
 
-  if (type === "analog") {
-    schemeColors = [
-      colors[(lastChosenIndex - 1 + colors.length) % colors.length],
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + 1) % colors.length]
-    ];
-  } else if (type === "complement") {
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
-    ];
-  } else if (type === "accentComplement") {
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex - 1 + colors.length) % colors.length],
-      colors[(lastChosenIndex + 1) % colors.length],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
-    ];
-  } else if (type === "triad") {
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + Math.floor(colors.length / 3)) % colors.length],
-      colors[(lastChosenIndex + 2 * Math.floor(colors.length / 3)) % colors.length]
-    ];
-  } else if (type === "splitComplement") {
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2) - 1 + colors.length) % colors.length],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2) + 1) % colors.length]
-    ];
-  } else if (type === "tetradic") {
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length],
-      colors[(lastChosenIndex + Math.floor(colors.length / 4)) % colors.length],
-      colors[(lastChosenIndex + Math.floor(3 * colors.length / 4)) % colors.length]
-    ];
-  } else if (type === "dyad") {
-    // Диада: два цвета через 180° ±30°
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2) - Math.floor(colors.length / 12) + colors.length) % colors.length],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2) + Math.floor(colors.length / 12)) % colors.length]
-    ];
-  } else if (type === "neutral") {
-    // Нейтральная: выбранный цвет + серые/бежевые тона
-    const base = colors[lastChosenIndex];
-    schemeColors = [
-      base,
-      { ...base, color: "#808080", text: "Нейтральный серый" },
-      { ...base, color: "#c0c0c0", text: "Светло‑серый" },
-      { ...base, color: "#d2b48c", text: "Бежевый" }
-    ];
-  } else if (type === "monochrome") {
-    const base = colors[lastChosenIndex];
-    schemeColors = [
-      base,
-      { ...base, color: shadeColor(base.color, -30), text: base.text + " (тёмный оттенок)" },
-      { ...base, color: shadeColor(base.color, 30), text: base.text + " (светлый оттенок)" }
-    ];
-  } else if (type === "tonal") {
-    const base = colors[lastChosenIndex];
-    schemeColors = [
-      base,
-      { ...base, color: shadeColor(base.color, -20), text: base.text + " (тёмный тон)" },
-      { ...base, color: shadeColor(base.color, 20), text: base.text + " (светлый тон)" },
-      { ...base, color: shadeColor(base.color, 40), text: base.text + " (пастельный)" }
-    ];
-  } else if (type === "splitTriad") {
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2) - 1 + colors.length) % colors.length],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2) + 1) % colors.length]
-    ];
-  } else if (type === "pentadic") {
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + Math.floor(colors.length / 5)) % colors.length],
-      colors[(lastChosenIndex + 2 * Math.floor(colors.length / 5)) % colors.length],
-      colors[(lastChosenIndex + 3 * Math.floor(colors.length / 5)) % colors.length],
-      colors[(lastChosenIndex + 4 * Math.floor(colors.length / 5)) % colors.length]
-    ];
-  } else if (type === "accentTriad") {
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + 1) % colors.length],
-      colors[(lastChosenIndex - 1 + colors.length) % colors.length],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
-    ];
-  } else if (type === "contrastAnalogous") {
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + 1) % colors.length],
-      colors[(lastChosenIndex - 1 + colors.length) % colors.length],
-      colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
-    ];
-  } else if (type === "tintedComplement") {
-    const base = colors[lastChosenIndex];
-    const comp = colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length];
-    schemeColors = [
-      base,
-      { ...base, color: shadeColor(base.color, 30), text: base.text + " (светлый)" },
-      comp,
-      { ...comp, color: shadeColor(comp.color, -30), text: comp.text + " (тёмный)" }
-    ];
-  } else if (type === "alsoGood") {
-    // Автоматически выбираем соседние сегменты ±2
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + 2) % colors.length],
-      colors[(lastChosenIndex - 2 + colors.length) % colors.length]
-    ];
-  } else if (type === "notGood") {
-    // Автоматически выбираем конфликтные сегменты (±90°)
-    schemeColors = [
-      colors[lastChosenIndex],
-      colors[(lastChosenIndex + Math.floor(colors.length / 4)) % colors.length],
-      colors[(lastChosenIndex - Math.floor(colors.length / 4) + colors.length) % colors.length]
-    ];
-  } else {
-    return;
+  switch (type) {
+    case "analog":
+      schemeColors = [
+        colors[(lastChosenIndex - 1 + colors.length) % colors.length],
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex + 1) % colors.length]
+      ];
+      break;
+
+    case "complement":
+      schemeColors = [
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
+      ];
+      break;
+
+    case "triad":
+      schemeColors = [
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex + Math.floor(colors.length / 3)) % colors.length],
+        colors[(lastChosenIndex + 2 * Math.floor(colors.length / 3)) % colors.length]
+      ];
+      break;
+
+    case "splitComplement":
+      schemeColors = [
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2) - 1 + colors.length) % colors.length],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2) + 1) % colors.length]
+      ];
+      break;
+
+    case "tetradic":
+      schemeColors = [
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length],
+        colors[(lastChosenIndex + Math.floor(colors.length / 4)) % colors.length],
+        colors[(lastChosenIndex + 3 * Math.floor(colors.length / 4)) % colors.length]
+      ];
+      break;
+
+    case "monochrome":
+      schemeColors = [
+        colors[lastChosenIndex],
+        { ...colors[lastChosenIndex], color: shadeColor(colors[lastChosenIndex].color, -30) },
+        { ...colors[lastChosenIndex], color: shadeColor(colors[lastChosenIndex].color, 30) }
+      ];
+      break;
+
+    case "accentComplement":
+      schemeColors = [
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex - 1 + colors.length) % colors.length],
+        colors[(lastChosenIndex + 1) % colors.length],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
+      ];
+      break;
+
+    case "dyad":
+      schemeColors = [
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2) - 2 + colors.length) % colors.length],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2) + 2) % colors.length]
+      ];
+      break;
+
+    case "neutral":
+      schemeColors = [
+        colors[lastChosenIndex],
+        { ...colors[lastChosenIndex], color: "#ccc", text: "Серый" },
+        { ...colors[lastChosenIndex], color: "#f5f5dc", text: "Бежевый" }
+      ];
+      break;
+
+    case "tonal":
+      schemeColors = [
+        colors[lastChosenIndex],
+        { ...colors[lastChosenIndex], color: shadeColor(colors[lastChosenIndex].color, -20) },
+        { ...colors[lastChosenIndex], color: shadeColor(colors[lastChosenIndex].color, 20) }
+      ];
+      break;
+
+    case "splitTriad":
+      schemeColors = [
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2) - 1 + colors.length) % colors.length],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2) + 1) % colors.length]
+      ];
+      break;
+
+    case "pentadic":
+      schemeColors = [];
+      for (let i = 0; i < 5; i++) {
+        schemeColors.push(colors[(lastChosenIndex + i * Math.floor(colors.length / 5)) % colors.length]);
+      }
+      break;
+
+    case "accentTriad":
+      schemeColors = [
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex + 1) % colors.length],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
+      ];
+      break;
+
+    case "contrastAnalogous":
+      schemeColors = [
+        colors[lastChosenIndex],
+        colors[(lastChosenIndex - 1 + colors.length) % colors.length],
+        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
+      ];
+      break;
+
+    case "tintedComplement":
+      schemeColors = [
+        colors[lastChosenIndex],
+        { ...colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length], color: shadeColor(colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length].color, 30) },
+        { ...colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length], color: shadeColor(colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length].color, -30) }
+      ];
+      break;
+
+    case "alsoGood":
+      schemeColors = [
+        colors[(lastChosenIndex + 2) % colors.length],
+        colors[(lastChosenIndex + 4) % colors.length]
+      ];
+      break;
+
+    case "notGood":
+      schemeColors = [
+        colors[(lastChosenIndex + 3) % colors.length],
+        colors[(lastChosenIndex + 6) % colors.length]
+      ];
+      break;
   }
 
   // ✅ единый вывод результата
@@ -533,12 +578,14 @@ function showScheme(type) {
     <div style="display:flex;gap:8px;margin-bottom:6px;">
       ${schemeColors.map(c => `<div style="width:30px;height:30px;background:${c.color};border:1px solid #000;"></div>`).join("")}
     </div>
-    <strong>Схема (${type}):</strong> 
+    <strong>Схема (${schemeInfo[type].name}):</strong><br>
+    📖 ${schemeInfo[type].description}<br>
+    💄 ${schemeInfo[type].makeup}<br><br>
     ${schemeColors.map(c => c.text + " (" + c.tone + ", " + c.style + ", " + c.season + ", " + c.colortype + ")").join(", ")}<br>
-    <em>Подсказки:</em> ${schemeColors.map(c => c.textureHint).join(" | ")}
+    <em>Подсказки:</em> ${schemeColors.map(c => c.textureHint || "—").join(" | ")}
   `;
 }
 
+
 // Инициализация после загрузки
 window.addEventListener("load", drawStylistColorWheel);
-
