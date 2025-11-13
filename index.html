@@ -232,13 +232,20 @@
   <canvas id="stylistColorWheel"></canvas>
   <div id="stylistColorResult" class="out">—</div>
 
-  <!-- Подсказка по схемам -->
-<div class="hint">
-  <strong>Подсказка:</strong><br>
-  🌿 <em>Аналоговая</em> — соседние цвета на круге, мягкая гармония.<br>
-  🎨 <em>Комплементарная</em> — противоположные цвета, яркий контраст.<br>
-  🔺 <em>Триада</em> — три цвета через равные промежутки, динамичный баланс.
-</div>
+  <!-- Панель схем -->
+  <div class="controls" style="margin-top:10px;">
+    <button class="btn func" onclick="showScheme('analog')">Аналоговая</button>
+    <button class="btn func" onclick="showScheme('complement')">Комплементарная</button>
+    <button class="btn func" onclick="showScheme('triad')">Триада</button>
+    <button class="btn func" onclick="showScheme('splitComplement')">Split Complement</button>
+    <button class="btn func" onclick="showScheme('tetradic')">Тетрада</button>
+    <button class="btn func" onclick="showScheme('monochrome')">Монохроматическая</button>
+    <button class="btn func" onclick="showScheme('accentComplement')">Акцентная комплементарная</button>
+    <button class="btn func" onclick="showScheme('dyad')">Диада</button>
+     <button class="btn func" onclick="showScheme('neutral')">Нейтральная</button>
+    <button class="btn func" onclick="showScheme('alsoGood')">Подходящие</button>
+    <button class="btn func" onclick="showScheme('notGood')">Неподходящие</button>
+  </div>
 
   <!-- Фильтр по стилю -->
   <div class="controls">
@@ -254,17 +261,19 @@
       <option value="яркий">Яркий</option>
     </select>
   </div>
-<!-- Фильтр по цветотип -->
-<div class="controls">
-  <label for="colortypeFilter"><strong>Фильтр по цветотипу:</strong></label>
-  <select id="colortypeFilter" onchange="highlightByColortype(this.value)">
-    <option value="">— Все цветотипы —</option>
-    <option value="весна">Весна</option>
-    <option value="лето">Лето</option>
-    <option value="осень">Осень</option>
-    <option value="зима">Зима</option>
-  </select>
-</div>
+
+  <!-- Фильтр по цветотипу -->
+  <div class="controls">
+    <label for="colortypeFilter"><strong>Фильтр по цветотипу:</strong></label>
+    <select id="colortypeFilter" onchange="highlightByColortype(this.value)">
+      <option value="">— Все цветотипы —</option>
+      <option value="весна">Весна</option>
+      <option value="лето">Лето</option>
+      <option value="осень">Осень</option>
+      <option value="зима">Зима</option>
+    </select>
+  </div>
+
   <!-- Фильтр по сезону -->
   <div class="controls">
     <label for="seasonFilter"><strong>Фильтр по сезону:</strong></label>
@@ -278,14 +287,22 @@
     </select>
   </div>
 
-  <!-- Кнопки схем -->
-  <div class="controls" style="margin-top:10px;">
-    <button class="btn func" onclick="showScheme('analog')">Аналоговая</button>
-    <button class="btn func" onclick="showScheme('complement')">Комплементарная</button>
-    <button class="btn func" onclick="showScheme('triad')">Триада</button>
-  </div>
+  <!-- Подсказка по схемам (внизу) -->
+<div class="hint" style="margin-top:15px;">
+  <strong>Подсказка:</strong><br>
+  🌿 <em>Аналоговая</em> — соседние цвета на круге, мягкая гармония.<br>
+  🎨 <em>Комплементарная</em> — противоположные цвета, яркий контраст.<br>
+  🔺 <em>Триада</em> — три цвета через равные промежутки, динамичный баланс.<br>
+  ✨ <em>Split Complement</em> — мягкий контраст с двумя соседними к противоположному.<br>
+  🟦 <em>Тетрада</em> — два комплементарных набора, богатая палитра.<br>
+  🎭 <em>Монохроматическая</em> — один цвет и его светлые/тёмные оттенки, спокойная гармония.<br>
+  🌟 <em>Акцентная комплементарная</em> — аналоговая группа + противоположный акцент.<br>
+  🔹 <em>Диада</em> — два цвета через 180° ±30°, мягкий контраст.<br>
+  ⚪ <em>Нейтральная</em> — основной цвет + серые/бежевые тона, спокойный фон.<br>
+  👍 <em>Подходящие</em> — дополнительные гармоничные оттенки из круга.<br>
+  ⚠️ <em>Неподходящие</em> — конфликтные сочетания из круга, которых лучше избегать.
+</div>
 </section>
-
 
 
 <!-- Конвертер единиц -->
