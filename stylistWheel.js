@@ -232,24 +232,252 @@ const colors = [
 ];
 // Справочник схем
 const schemeInfo = {
-  analog:{name:"Аналоговая",description:"Соседние цвета на круге, мягкая гармония.",makeup:"Дневные тени, нюдовые губы."},
-  complement:{name:"Комплементарная",description:"Противоположные цвета, яркий контраст.",makeup:"Подчёркивание глаз."},
-  triad:{name:"Триада",description:"Три цвета через равные промежутки.",makeup:"Яркий вечерний макияж."},
-  splitComplement:{name:"Split Complement",description:"Основной цвет + два соседних к противоположному.",makeup:"Мягкий контраст."},
-  tetradic:{name:"Тетрада",description:"Два комплементарных набора.",makeup:"Креативные образы."},
-  monochrome:{name:"Монохроматическая",description:"Один цвет и его оттенки.",makeup:"Smoky eyes, нюдовые губы."},
-  accentComplement:{name:"Акцентная комплементарная",description:"Аналоговая база + противоположный акцент.",makeup:"Яркая подводка."},
-  dyad:{name:"Диада",description:"Два цвета через 180° ±30°.",makeup:"Мягкий контраст."},
-  neutral:{name:"Нейтральная",description:"Основной цвет + серые/бежевые тона.",makeup:"Офисный стиль."},
-  tonal:{name:"Тональная",description:"Один цвет + вариации по насыщенности.",makeup:"Розовые губы."},
-  splitTriad:{name:"Мягкая триада",description:"Основной цвет + два соседних к комплементу.",makeup:"Мягкий вариант триады."},
-  pentadic:{name:"Пентада",description:"Пять цветов через равные промежутки.",makeup:"Сценический макияж."},
-  accentTriad:{name:"Акцентная триада",description:"Два соседних цвета + противоположный акцент.",makeup:"Яркие губы."},
-  contrastAnalogous:{name:"Контрастная аналогия",description:"Соседние цвета + один контрастный.",makeup:"Тени с акцентом."},
-  tintedComplement:{name:"Tinted Complement",description:"Основной цвет + комплемент в разных насыщенностях.",makeup:"Зелёный + красно-коричневый."},
-  alsoGood:{name:"Подходящие",description:"Дополнительные гармоничные оттенки.",makeup:"Быстрый выбор."},
-  notGood:{name:"Неподходящие",description:"Конфликтные сочетания.",makeup:"Избегать."}
+  analog:{
+    name:"Аналоговая",
+    description:"Соседние цвета на круге, мягкая гармония.",
+    makeup:"Мягкие переходы оттенков: нюдовые губы, дневные тени и плавный румянец.",
+    clothingStyle:"Повседневный, офисный, романтичный.",
+    hint:"Усиливает гармонию, делает образ мягким и спокойным.",
+    tips:{ clothing:"Платья и костюмы в близких оттенках.", accessories:"Пастельные украшения, лёгкие шарфы." },
+    season:"Лето",
+    psychology:"Спокойствие, гармония.",
+    occasion:"Офис, повседневные встречи.",
+    hairTips:"Используй мягкие тона для окрашивания, избегай резких контрастов.",
+    interior:"Гармоничные переходы в текстиле и отделке.",
+    paletteRule:"Выбираются два соседних цвета от базового."
+  },
+  complement:{
+    name:"Комплементарная",
+    description:"Противоположные цвета, яркий контраст.",
+    makeup:"Яркие тени и подводка, акцентные губы.",
+    clothingStyle:"Вечерний, праздничный.",
+    hint:"Усиливает контраст, подчёркивает основной цвет.",
+    tips:{ clothing:"Контрастные платья, смелые костюмы.", accessories:"Яркие сумки, обувь, украшения." },
+    season:"Зима",
+    psychology:"Энергия, внимание.",
+    occasion:"Праздники, вечерние выходы.",
+    hairTips:"Используй противоположные оттенки для акцентных прядей.",
+    interior:"Акцентные стены и декор в противоположных цветах.",
+    paletteRule:"Выбирается противоположный цвет на круге (180°)."
+  },
+  triad:{
+    name:"Триада",
+    description:"Три цвета через равные промежутки.",
+    makeup:"Яркие губы, насыщенные тени и выразительный румянец.",
+    clothingStyle:"Креативный, сценический.",
+    hint:"Баланс трёх оттенков, динамика и яркость.",
+    tips:{ clothing:"Яркие комбинации для шоу.", accessories:"Контрастные серьги, ремни, клатчи." },
+    season:"Весна",
+    psychology:"Игривость, креатив.",
+    occasion:"Фестивали, сцена.",
+    hairTips:"Используй три оттенка для окрашивания: основной + два акцента.",
+    interior:"Яркие акцентные зоны в интерьере.",
+    paletteRule:"Три цвета через 120°."
+  },
+  splitComplement:{
+    name:"Split Complement",
+    description:"Основной цвет + два соседних к противоположному.",
+    makeup:"Мягкие акценты для глаз и губ.",
+    clothingStyle:"Сбалансированный, повседневный.",
+    hint:"Смягчает контраст.",
+    tips:{ clothing:"Деловые костюмы с мягкими акцентами.", accessories:"Нейтральные сумки." },
+    season:"Осень",
+    psychology:"Гармония, мягкость.",
+    occasion:"Работа, деловые встречи.",
+    hairTips:"Используй мягкие оттенки для окрашивания.",
+    interior:"Сочетание основного цвета с мягкими акцентами.",
+    paletteRule:"Основной цвет + два соседних к комплементу."
+  },
+  tetradic:{
+    name:"Тетрада",
+    description:"Два комплементарных набора.",
+    makeup:"Смелые сочетания теней и губной помады.",
+    clothingStyle:"Авангардный, арт‑деко.",
+    hint:"Сложные и богатые комбинации.",
+    tips:{ clothing:"Сложные сочетания для модных показов.", accessories:"Яркие акцентные украшения." },
+    season:"Зима",
+    psychology:"Насыщенность, энергия.",
+    occasion:"Мода, арт‑события.",
+    hairTips:"Используй контрастные пары оттенков.",
+    interior:"Сложные цветовые комбинации в интерьере.",
+    paletteRule:"Четыре цвета: два противоположных набора."
+  },
+  monochrome:{
+    name:"Монохроматическая",
+    description:"Один цвет и его оттенки.",
+    makeup:"Smoky eyes, нюдовые губы, мягкий румянец.",
+    clothingStyle:"Минимализм, элегантность.",
+    hint:"Усиливает глубину одного цвета.",
+    tips:{ clothing:"Монохромные костюмы и платья.", accessories:"Сумка и обувь в том же цвете." },
+    season:"Осень",
+    psychology:"Сдержанность, утончённость.",
+    occasion:"Офис, деловые встречи.",
+    hairTips:"Используй один цвет в разных насыщенностях.",
+    interior:"Монохромные интерьеры с акцентами.",
+    paletteRule:"Один цвет + вариации по насыщенности."
+  },
+  tintedComplement:{
+    name:"Tinted Complement",
+    description:"Основной цвет + комплемент в разных насыщенностях.",
+    makeup:"Приглушённые комплементы: зелёный с красно‑коричневым.",
+    clothingStyle:"Элегантный, утончённый.",
+    hint:"Смягчённый контраст.",
+    tips:{ clothing:"Элегантные вечерние наряды.", accessories:"Утончённые украшения." },
+    season:"Зима",
+    psychology:"Сдержанность, утончённость.",
+    occasion:"Вечерние выходы, элегантные мероприятия.",
+    hairTips:"Используй приглушённые комплементы для окрашивания.",
+    interior:"Приглушённые контрастные сочетания для текстиля и акцентных деталей.",
+    paletteRule:"Основной цвет + комплемент в разных насыщенностях."
+  },
+  accentTriad:{
+    name:"Акцентная триада",
+    description:"Два соседних цвета + противоположный акцент.",
+    makeup:"Акцентируй губы или глаза ярким цветом, сохраняя гармонию двух соседних оттенков.",
+    clothingStyle:"Креативный, модный.",
+    hint:"Усиливает акцентный цвет.",
+    tips:{ clothing:"Два базовых цвета + яркий акцент.", accessories:"Модные аксессуары." },
+    season:"Весна",
+    psychology:"Креатив, динамика.",
+    occasion:"Модные выходы.",
+    hairTips:"Используй два мягких оттенка и один яркий акцент в окрашивании.",
+    interior:"Два спокойных цвета + яркий акцент в декоре.",
+    paletteRule:"Два соседних цвета + противоположный акцент."
+  },
+  contrastAnalogous:{
+    name:"Контрастная аналогия",
+    description:"Соседние цвета + один контрастный.",
+    makeup:"Добавь яркий акцент к мягкой базе, чтобы подчеркнуть глаза или губы.",
+    clothingStyle:"Повседневный с акцентом.",
+    hint:"Усиливает контрастный элемент.",
+    tips:{ clothing:"Базовые вещи + контрастная деталь.", accessories:"Акцентные украшения." },
+    season:"Осень",
+    psychology:"Баланс мягкости и контраста.",
+    occasion:"Повседневные выходы.",
+    hairTips:"Используй мягкую базу и один контрастный оттенок для окрашивания.",
+    interior:"Базовые цвета в интерьере + контрастная деталь.",
+    paletteRule:"Соседние цвета + один контрастный."
+  },
+  alsoGood:{
+    name:"Подходящие",
+    description:"Дополнительные гармоничные оттенки.",
+    makeup:"Универсальные сочетания для быстрого выбора.",
+    clothingStyle:"Универсальный.",
+    hint:"Усиливают гармонию, помогают быстро подобрать сочетания.",
+    tips:{ clothing:"Базовые образы.", accessories:"Нейтральные аксессуары." },
+    season:"Универсальный",
+    psychology:"Гармония, спокойствие.",
+    occasion:"Любые ситуации.",
+    hairTips:"Используй гармоничные оттенки для окрашивания.",
+    interior:"Универсальные сочетания для интерьера.",
+    paletteRule:"Дополнительные гармоничные оттенки."
+  },
+  notGood:{
+    name:"Неподходящие",
+    description:"Конфликтные сочетания.",
+    makeup:"Не использовать вместе — создают диссонанс.",
+    clothingStyle:"Избегать.",
+    hint:"Усиливают диссонанс, создают конфликт в образе.",
+    tips:{ clothing:"Избегать конфликтных сочетаний.", accessories:"Не использовать." },
+    season:"Нет",
+    psychology:"Дисгармония.",
+    occasion:"Не рекомендуется.",
+    hairTips:"Не сочетай конфликтные оттенки в окрашивании.",
+    interior:"Избегай конфликтных сочетаний в интерьере.",
+    paletteRule:"Конфликтные сочетания, не использовать."
+  },
+
+  accentComplement:{
+    name:"Акцентная комплементарная",
+    description:"Аналоговая база + противоположный акцент.",
+    makeup:"Акцентируй глаза или губы ярким цветом при мягкой базе.",
+    clothingStyle:"Casual с акцентом.",
+    hint:"Усиливает цвет второго оттенка.",
+    tips:{ clothing:"Базовый образ + яркий аксессуар.", accessories:"Яркие ремни, сумки или обувь." },
+    season:"Весна",
+    psychology:"Энергия, динамика.",
+    occasion:"Повседневные выходы.",
+    hairTips:"Добавь яркий акцентный оттенок в окрашивание.",
+    interior:"Базовые цвета + яркий акцент в декоре.",
+    paletteRule:"Аналоговая база + противоположный акцент."
+  },
+
+  dyad:{
+    name:"Диада",
+    description:"Два цвета через 180° ±30°.",
+    makeup:"Приглушённые оттенки для мягкого контраста.",
+    clothingStyle:"Деловой, классический.",
+    hint:"Мягкий контраст без перегрузки.",
+    tips:{ clothing:"Сдержанные костюмы.", accessories:"Классические украшения." },
+    season:"Осень",
+    psychology:"Баланс, спокойствие.",
+    occasion:"Работа, официальные встречи.",
+    hairTips:"Используй два приглушённых оттенка для окрашивания.",
+    interior:"Сдержанные контрастные пары в интерьере.",
+    paletteRule:"Два цвета через 180° ±30°."
+  },
+
+  neutral:{
+    name:"Нейтральная",
+    description:"Основной цвет + серые/бежевые тона.",
+    makeup:"Нюдовые губы и лёгкие тени.",
+    clothingStyle:"Офисный, базовый.",
+    hint:"Усиливает базовый цвет за счёт спокойных тонов.",
+    tips:{ clothing:"Серые и бежевые костюмы.", accessories:"Классические сумки и обувь." },
+    season:"Универсальный",
+    psychology:"Сдержанность.",
+    occasion:"Офис, деловые будни.",
+    hairTips:"Используй нейтральные оттенки для окрашивания.",
+    interior:"Серые и бежевые тона в интерьере.",
+    paletteRule:"Основной цвет + нейтральные тона."
+  },
+
+  tonal:{
+    name:"Тональная",
+    description:"Один цвет + вариации по насыщенности.",
+    makeup:"Розовые губы, мягкие тени и румянец.",
+    clothingStyle:"Романтичный, нежный.",
+    hint:"Плавные переходы насыщенности.",
+    tips:{ clothing:"Платья и костюмы в оттенках одного цвета.", accessories:"Монотонные украшения." },
+    season:"Весна",
+    psychology:"Нежность, мягкость.",
+    occasion:"Свидания, романтические вечера.",
+    hairTips:"Используй оттенки одного цвета для окрашивания.",
+    interior:"Мягкие переходы одного цвета в интерьере.",
+    paletteRule:"Один цвет + вариации насыщенности."
+  },
+
+  splitTriad:{
+    name:"Мягкая триада",
+    description:"Основной цвет + два соседних к комплементу.",
+    makeup:"Мягкие акценты для глаз и губ.",
+    clothingStyle:"Сбалансированный, лёгкий.",
+    hint:"Гармония с мягкими акцентами.",
+    tips:{ clothing:"Летние casual‑образы.", accessories:"Нежные детали." },
+    season:"Лето",
+    psychology:"Лёгкость, гармония.",
+    occasion:"Прогулки, отдых.",
+    hairTips:"Используй мягкие акцентные оттенки.",
+    interior:"Лёгкие акцентные сочетания в интерьере.",
+    paletteRule:"Основной цвет + два соседних к комплементу."
+  },
+
+  pentadic:{
+    name:"Пентада",
+    description:"Пять цветов через равные промежутки.",
+    makeup:"Яркие сочетания теней и губ для сцены.",
+    clothingStyle:"Театральный, сценический.",
+    hint:"Максимальная яркость, эффект шоу.",
+    tips:{ clothing:"Яркие костюмы для шоу.", accessories:"Акцентные украшения." },
+    season:"Зима",
+    psychology:"Энергия, насыщенность.",
+    occasion:"Сцена, выступления.",
+    hairTips:"Используй пять оттенков для окрашивания — основной и дополнительные акценты.",
+    interior:"Яркие акцентные зоны в интерьере для шоу‑пространств.",
+    paletteRule:"Пять цветов через равные промежутки."
+  }
 };
+
 // Вспомогательная функция для изменения яркости
 function shadeColor(color, percent) {
   let f = parseInt(color.slice(1),16),
@@ -430,162 +658,160 @@ function shadeColor(color, percent) {
     (Math.round((t-B)*p/100)+B)).toString(16).slice(1);
 }
 
-// Схемы
+// генераторы цветов для каждой схемы
+const schemeGenerators = {
+  analog: (i, colors) => [
+    colors[(i - 1 + colors.length) % colors.length],
+    colors[i],
+    colors[(i + 1) % colors.length]
+  ],
+  complement: (i, colors) => [
+    colors[i],
+    colors[(i + Math.floor(colors.length / 2)) % colors.length]
+  ],
+  triad: (i, colors) => [
+    colors[i],
+    colors[(i + Math.floor(colors.length / 3)) % colors.length],
+    colors[(i + 2 * Math.floor(colors.length / 3)) % colors.length]
+  ],
+  splitComplement: (i, colors) => [
+    colors[i],
+    colors[(i + Math.floor(colors.length / 2) - 1 + colors.length) % colors.length],
+    colors[(i + Math.floor(colors.length / 2) + 1) % colors.length]
+  ],
+  tetradic: (i, colors) => [
+    colors[i],
+    colors[(i + Math.floor(colors.length / 2)) % colors.length],
+    colors[(i + Math.floor(colors.length / 4)) % colors.length],
+    colors[(i + 3 * Math.floor(colors.length / 4)) % colors.length]
+  ],
+  monochrome: (i, colors) => [
+    colors[i],
+    { ...colors[i], color: shadeColor(colors[i].color, -30) },
+    { ...colors[i], color: shadeColor(colors[i].color, 30) }
+  ],
+  accentComplement: (i, colors) => [
+    colors[i],
+    colors[(i - 1 + colors.length) % colors.length],
+    colors[(i + 1) % colors.length],
+    colors[(i + Math.floor(colors.length / 2)) % colors.length]
+  ],
+  dyad: (i, colors) => [
+    colors[i],
+    colors[(i + Math.floor(colors.length / 2) - 2 + colors.length) % colors.length],
+    colors[(i + Math.floor(colors.length / 2) + 2) % colors.length]
+  ],
+  neutral: (i, colors) => [
+    colors[i],
+    { ...colors[i], color: "#ccc", text: "Серый" },
+    { ...colors[i], color: "#f5f5dc", text: "Бежевый" }
+  ],
+  tonal: (i, colors) => [
+    colors[i],
+    { ...colors[i], color: shadeColor(colors[i].color, -20) },
+    { ...colors[i], color: shadeColor(colors[i].color, 20) }
+  ],
+  splitTriad: (i, colors) => [
+    colors[i],
+    colors[(i + Math.floor(colors.length / 2) - 1 + colors.length) % colors.length],
+    colors[(i + Math.floor(colors.length / 2) + 1) % colors.length]
+  ],
+  pentadic: (i, colors) => {
+    let arr = [];
+    for (let k = 0; k < 5; k++) {
+      arr.push(colors[(i + k * Math.floor(colors.length / 5)) % colors.length]);
+    }
+    return arr;
+  },
+  accentTriad: (i, colors) => [
+    colors[i],
+    colors[(i + 1) % colors.length],
+    colors[(i + Math.floor(colors.length / 2)) % colors.length]
+  ],
+  contrastAnalogous: (i, colors) => [
+    colors[i],
+    colors[(i - 1 + colors.length) % colors.length],
+    colors[(i + Math.floor(colors.length / 2)) % colors.length]
+  ],
+  tintedComplement: (i, colors) => [
+    colors[i],
+    { ...colors[(i + Math.floor(colors.length / 2)) % colors.length], color: shadeColor(colors[(i + Math.floor(colors.length / 2)) % colors.length].color, 30) },
+    { ...colors[(i + Math.floor(colors.length / 2)) % colors.length], color: shadeColor(colors[(i + Math.floor(colors.length / 2)) % colors.length].color, -30) }
+  ],
+  alsoGood: (i, colors) => [
+    colors[(i - 2 + colors.length) % colors.length],
+    colors[(i - 1 + colors.length) % colors.length],
+    colors[(i + 1) % colors.length],
+    colors[(i + 2) % colors.length]
+  ],
+
+  notGood: (i, colors) => {
+    const half = Math.floor(colors.length / 2);
+
+    // кандидаты вокруг противоположного
+    let candidates = [
+      colors[(i + half - 3 + colors.length) % colors.length],
+      colors[(i + half - 2 + colors.length) % colors.length],
+      colors[(i + half - 1 + colors.length) % colors.length],
+      colors[(i + half) % colors.length], // сам комплемент
+      colors[(i + half + 1) % colors.length],
+      colors[(i + half + 2) % colors.length],
+      colors[(i + half + 3) % colors.length]
+    ];
+
+    // индексы подходящих и гармоничных схем
+    const excludeIndexes = [
+      (i - 2 + colors.length) % colors.length,
+      (i - 1 + colors.length) % colors.length,
+      (i + 1) % colors.length,
+      (i + 2) % colors.length, // alsoGood
+      (i - 1 + colors.length) % colors.length,
+      (i + 1) % colors.length, // analog
+      (i + Math.floor(colors.length / 3)) % colors.length,
+      (i + 2 * Math.floor(colors.length / 3)) % colors.length, // triad
+      (i + half) % colors.length // complement
+    ];
+
+    // фильтруем кандидатов
+    candidates = candidates.filter(c => !excludeIndexes.includes(colors.indexOf(c)));
+
+    // оставляем только 5 конфликтных
+    return candidates.slice(0, 5);
+  }
+};
+
+// универсальная функция
 function showScheme(type) {
   const result = document.getElementById("schemeGuide");
   if (!result || lastChosenIndex === null) return;
 
-  let schemeColors = [];
+  const generator = schemeGenerators[type];
+  const scheme = schemeInfo[type];
 
-  switch (type) {
-    case "analog":
-      schemeColors = [
-        colors[(lastChosenIndex - 1 + colors.length) % colors.length],
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex + 1) % colors.length]
-      ];
-      break;
-
-    case "complement":
-      schemeColors = [
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
-      ];
-      break;
-
-    case "triad":
-      schemeColors = [
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex + Math.floor(colors.length / 3)) % colors.length],
-        colors[(lastChosenIndex + 2 * Math.floor(colors.length / 3)) % colors.length]
-      ];
-      break;
-
-    case "splitComplement":
-      schemeColors = [
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2) - 1 + colors.length) % colors.length],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2) + 1) % colors.length]
-      ];
-      break;
-
-    case "tetradic":
-      schemeColors = [
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length],
-        colors[(lastChosenIndex + Math.floor(colors.length / 4)) % colors.length],
-        colors[(lastChosenIndex + 3 * Math.floor(colors.length / 4)) % colors.length]
-      ];
-      break;
-
-    case "monochrome":
-      schemeColors = [
-        colors[lastChosenIndex],
-        { ...colors[lastChosenIndex], color: shadeColor(colors[lastChosenIndex].color, -30) },
-        { ...colors[lastChosenIndex], color: shadeColor(colors[lastChosenIndex].color, 30) }
-      ];
-      break;
-
-    case "accentComplement":
-      schemeColors = [
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex - 1 + colors.length) % colors.length],
-        colors[(lastChosenIndex + 1) % colors.length],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
-      ];
-      break;
-
-    case "dyad":
-      schemeColors = [
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2) - 2 + colors.length) % colors.length],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2) + 2) % colors.length]
-      ];
-      break;
-
-    case "neutral":
-      schemeColors = [
-        colors[lastChosenIndex],
-        { ...colors[lastChosenIndex], color: "#ccc", text: "Серый" },
-        { ...colors[lastChosenIndex], color: "#f5f5dc", text: "Бежевый" }
-      ];
-      break;
-
-    case "tonal":
-      schemeColors = [
-        colors[lastChosenIndex],
-        { ...colors[lastChosenIndex], color: shadeColor(colors[lastChosenIndex].color, -20) },
-        { ...colors[lastChosenIndex], color: shadeColor(colors[lastChosenIndex].color, 20) }
-      ];
-      break;
-
-    case "splitTriad":
-      schemeColors = [
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2) - 1 + colors.length) % colors.length],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2) + 1) % colors.length]
-      ];
-      break;
-
-    case "pentadic":
-      schemeColors = [];
-      for (let i = 0; i < 5; i++) {
-        schemeColors.push(colors[(lastChosenIndex + i * Math.floor(colors.length / 5)) % colors.length]);
-      }
-      break;
-
-    case "accentTriad":
-      schemeColors = [
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex + 1) % colors.length],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
-      ];
-      break;
-
-    case "contrastAnalogous":
-      schemeColors = [
-        colors[lastChosenIndex],
-        colors[(lastChosenIndex - 1 + colors.length) % colors.length],
-        colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length]
-      ];
-      break;
-
-    case "tintedComplement":
-      schemeColors = [
-        colors[lastChosenIndex],
-        { ...colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length], color: shadeColor(colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length].color, 30) },
-        { ...colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length], color: shadeColor(colors[(lastChosenIndex + Math.floor(colors.length / 2)) % colors.length].color, -30) }
-      ];
-      break;
-
-    case "alsoGood":
-      schemeColors = [
-        colors[(lastChosenIndex + 2) % colors.length],
-        colors[(lastChosenIndex + 4) % colors.length]
-      ];
-      break;
-
-    case "notGood":
-      schemeColors = [
-        colors[(lastChosenIndex + 3) % colors.length],
-        colors[(lastChosenIndex + 6) % colors.length]
-      ];
-      break;
+  if (!generator || !scheme) {
+    result.innerHTML = "Схема не найдена.";
+    return;
   }
 
-  // ✅ единый вывод результата
+  const schemeColors = generator(lastChosenIndex, colors);
+
   result.innerHTML = `
     <div style="display:flex;gap:8px;margin-bottom:6px;">
-      ${schemeColors.map(c => `<div style="width:30px;height:30px;background:${c.color};border:1px solid #000;"></div>`).join("")}
+      ${schemeColors.map(c => `<div style="width:30px;height:30px;background:${c.color};border:1px solid #000;" title="${c.text || ""}"></div>`).join("")}
     </div>
-    <strong>Схема (${schemeInfo[type].name}):</strong><br>
-    📖 ${schemeInfo[type].description}<br>
-    💄 ${schemeInfo[type].makeup}<br><br>
-    ${schemeColors.map(c => c.text + " (" + c.tone + ", " + c.style + ", " + c.season + ", " + c.colortype + ")").join(", ")}<br>
-    <em>Подсказки:</em> ${schemeColors.map(c => c.textureHint || "—").join(" | ")}
+    <strong>Схема (${scheme.name}):</strong><br>
+    📖 ${scheme.description}<br>
+    💄 ${scheme.makeup}<br>
+    👗 ${scheme.clothingStyle}<br>
+    🎀 ${scheme.tips?.accessories || "—"}<br>
+    🌸 Сезон: ${scheme.season}<br>
+    🧠 Психология: ${scheme.psychology}<br>
+    🎉 Случай: ${scheme.occasion}<br>
+    💇 Волосы: ${scheme.hairTips || "—"}<br>
+    🏠 Интерьер: ${scheme.interior || "—"}<br>
+    🎨 Правило палитры: ${scheme.paletteRule || "—"}<br>
   `;
 }
-
 
 // Инициализация после загрузки
 window.addEventListener("load", drawStylistColorWheel);
