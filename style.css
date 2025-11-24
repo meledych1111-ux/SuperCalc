@@ -65,12 +65,12 @@ body {
   padding: 16px;
   font-size: 24px;
   text-align: right;
-  color: var(--accent2);
+  color: #ffffff !important; /* ИЗМЕНЕНИЕ: белый цвет цифр */
   box-shadow: inset 0 0 20px rgba(79,172,254,0.3);
   overflow-x: auto;
   white-space: nowrap;
+  text-shadow: 0 0 10px rgba(79,172,254,0.7) !important; /* добавлена тень для лучшей видимости */
 }
-
 /* клавиатура */
 .keypad {
   display: grid;
@@ -216,15 +216,30 @@ body {
   padding: 10px;
   margin-bottom: 6px;
   cursor: pointer;
-  color: var(--accent1);
+  color: #ffffff !important; /* белый цвет текста */
   transition: all 0.3s ease;
 }
+
+/* Принудительно делаем ВСЕ содержимое карточек истории белым */
+.history-item *,
+.history-item span,
+.history-item div,
+.history-item p {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
 .history-item:hover {
   background: linear-gradient(135deg, var(--accent2), var(--accent3));
-  color: #000;
+  color: #000 !important;
   box-shadow: 0 0 10px var(--accent2);
 }
 
+/* При наведении тоже белый текст для дочерних элементов */
+.history-item:hover * {
+  color: #000 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+}
 /* график */
 #graphCanvas {
   width: 100%;
@@ -346,7 +361,7 @@ canvas {
 .makeup-list {
   list-style: none;
   padding: 0;
-  margin: 8px 0 0 0;
+  margin: 14px 0 0 0;
 }
 .makeup-list li {
   display: flex;
@@ -392,4 +407,1300 @@ canvas {
 .btn.func:hover {
   background: rgba(255,255,255,0.15);
   transform: translateY(-1px);
+}
+.tab-page { display: none; }
+.tab-page.active { display: block; }
+
+/* Стили для карточки цвета */
+.color-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 8px 0;
+    font-size: 11px;
+}
+
+.color-card.light {
+    background: rgba(15,15,26,0.8);
+}
+
+.color-header {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.color-swatch {
+    width: 100%;
+    height: 70px; /* Увеличили высоту */
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 16px; /* Больше закругление */
+    margin-bottom: 8px;
+    box-shadow: 
+        0 8px 16px rgba(0,0,0,0.3),
+        0 4px 8px rgba(255,255,255,0.1) inset,
+        0 -4px 8px rgba(0,0,0,0.2) inset;
+    transform: translateZ(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.color-info {
+    flex: 1;
+}
+
+.color-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--text);
+    margin-bottom: 2px;
+}
+
+.color-meta {
+    font-size: 9px;
+    color: var(--muted);
+}
+
+.color-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.detail-item {
+    background: rgba(255,255,255,0.05);
+    padding: 8px;
+    border-radius: 4px;
+    border-left: 2px solid var(--accent2);
+}
+
+.detail-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 1px;
+}
+
+.detail-value {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.combinations {
+    margin-bottom: 8px;
+}
+
+.combinations-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.combinations-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.color-chip, .contrast-chip {
+    flex: 1;
+    text-align: center;
+    padding: 10px 6px;
+    border-radius: 20px; /* Полностью округлые */
+    font-size: 11px;
+    font-weight: 600;
+    border: 2px solid rgba(255,255,255,0.3);
+    box-shadow: 
+        0 6px 12px rgba(0,0,0,0.3),
+        0 3px 6px rgba(255,255,255,0.2) inset,
+        0 -3px 6px rgba(0,0,0,0.2) inset;
+    transform: translateZ(8px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.makeup-section.light {
+    background: rgba(26,26,46,0.8);
+}
+
+.makeup-label {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.makeup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+.makeup-item {
+    text-align: center;
+}
+
+.makeup-icon {
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.makeup-category {
+    font-size: 8px;
+    color: var(--muted);
+    margin-bottom: 1px;
+}
+
+.makeup-value {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.makeup-style {
+    text-align: center;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.style-label {
+    font-size: 8px;
+    color: var(--muted);
+    margin-bottom: 1px;
+}
+
+.style-value {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.makeup-hint {
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 6px;
+}
+
+.no-color-message {
+    text-align: center;
+    padding: 12px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* Стили для схем цветов */
+.no-scheme-message {
+    color: var(--muted);
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+}
+
+.scheme-error {
+    color: #e74c3c;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+}
+
+.scheme-header {
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.scheme-title {
+    margin: 0 0 16px 0;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.scheme-colors {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.scheme-color-item {
+    flex: 1;
+    min-width: 60px;
+    text-align: center;
+}
+
+.scheme-swatch {
+    width: 100%;
+    height: 50px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    margin-bottom: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.scheme-color-name {
+    font-size: 11px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.scheme-details {
+    line-height: 1.6;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.scheme-section {
+    background: rgba(255,255,255,0.05);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    border-left: 4px solid;
+}
+
+.section-label {
+    color: var(--text);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.section-content {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Цвета для разных секций */
+.scheme-description {
+    border-left-color: var(--accent2);
+}
+
+.scheme-makeup {
+    border-left-color: var(--accent3);
+    background: rgba(249, 212, 35, 0.1);
+}
+
+.scheme-clothing {
+    border-left-color: var(--accent1);
+    background: rgba(255, 110, 199, 0.1);
+}
+
+.scheme-accessories {
+    border-left-color: var(--accent4);
+    background: rgba(196, 113, 237, 0.1);
+}
+
+.scheme-occasion {
+    border-left-color: var(--accent2);
+    background: rgba(79, 172, 254, 0.1);
+}
+
+.scheme-hair {
+    border-left-color: var(--accent3);
+    background: rgba(249, 212, 35, 0.1);
+}
+
+.scheme-interior {
+    border-left-color: var(--accent4);
+    background: rgba(196, 113, 237, 0.1);
+}
+
+.scheme-palette {
+    background: var(--bg1);
+    border-left-color: var(--accent1);
+}
+
+.scheme-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.meta-item {
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.meta-label {
+    color: var(--muted);
+    display: block;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.meta-value {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.scheme-hint {
+    background: rgba(23, 162, 184, 0.1);
+    padding: 10px;
+    border-radius: 6px;
+    border-left: 4px solid var(--accent2);
+    margin-top: 12px;
+}
+
+.hint-label {
+    color: var(--accent2);
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.hint-content {
+    color: var(--text);
+    font-size: 12px;
+    font-style: italic;
+}
+/* Стили для панели активных фильтров */
+.active-filters-panel {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+    border: 1px solid #e9ecef;
+}
+
+.active-filter-item {
+    display: inline-flex;
+    align-items: center;
+    background: #007bff;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.active-filter-remove {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.active-filter-remove:hover {
+    color: #ffd700;
+}
+
+.clear-all-filters {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.clear-all-filters:hover {
+    background: #5a6268;
+}
+
+.no-filters {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Стили для кнопок фильтров */
+.filter-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Анимации для плавного переключения */
+.tab-page {
+    transition: opacity 0.3s ease;
+}
+
+.filter-group {
+    transition: all 0.3s ease;
+}
+
+.filter-group.collapsed .filter-group-content {
+    display: none;
+}
+.filters-content {
+    transition: all 0.3s ease;
+}
+/* Стили для секции фильтров */
+.filters-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filters-controls {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.toggle-all-filters {
+    background: var(--accent1);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.toggle-all-filters:hover {
+    background: var(--accent2);
+    transform: translateY(-2px);
+}
+
+/* Стили для конвертера */
+.converter-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.text-input, .num-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    font-size: 14px;
+}
+
+.text-input:focus, .num-input:focus {
+    outline: none;
+    border-color: var(--accent1);
+}
+
+.btn.wide {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent1);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.btn.wide:hover {
+    background: var(--accent2);
+    transform: translateY(-2px);
+}
+
+.result-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent1);
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    min-height: 20px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .filters-section {
+        padding: 15px;
+    }
+}
+/* Стили для панели активных фильтров */
+.active-filters {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 15px;
+    margin: 15px 0;
+    min-height: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.active-filter-item {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(255, 110, 199, 0.3);
+}
+
+.active-filter-remove {
+    background: none;
+    border: none;
+    color: white;
+    margin-left: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.active-filter-remove:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.clear-all-filters {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.clear-all-filters:hover {
+    background: var(--accent4);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.no-filters {
+    color: var(--muted);
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+}
+
+/* Стили для групп фильтров */
+.filter-group {
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.filter-group-header:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+}
+
+.filter-group-label {
+    font-weight: bold;
+    color: var(--text);
+    font-size: 16px;
+}
+
+.filter-toggle {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.filter-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-group.collapsed .filter-toggle {
+    transform: rotate(-90deg);
+}
+
+.filter-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.filter-group.collapsed .filter-buttons {
+    display: none;
+}
+
+/* Стили для кнопок фильтров */
+.filter-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    padding: 12px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.filter-btn:hover {
+    border-color: var(--accent1);
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    color: white;
+    border-color: var(--accent1);
+    box-shadow: 0 6px 20px rgba(255, 110, 199, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Управление фильтрами */
+.filters-controls {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.toggle-all-filters {
+    background: linear-gradient(135deg, var(--accent2), var(--accent4));
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.toggle-all-filters:hover {
+    background: linear-gradient(135deg, var(--accent1), var(--accent3));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+/* Конвертер единиц */
+.converter-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.text-input, .num-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    font-size: 14px;
+}
+
+.text-input:focus, .num-input:focus {
+    outline: none;
+    border-color: var(--accent1);
+    box-shadow: 0 0 0 3px rgba(255, 110, 199, 0.1);
+}
+
+.btn.wide {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.btn.wide:hover {
+    background: linear-gradient(135deg, var(--accent2), var(--accent3));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 110, 199, 0.3);
+}
+
+.result-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent1);
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    min-height: 20px;
+    color: var(--accent2);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .filters-section {
+        padding: 15px;
+    }
+    
+    .filter-buttons {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 8px;
+    }
+    
+    .filter-btn {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .filter-group {
+        padding: 15px;
+    }
+    
+    .active-filter-item {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-buttons {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .filters-controls {
+        text-align: center;
+    }
+    
+    .toggle-all-filters {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.filter-group {
+    animation: fadeIn 0.3s ease;
+}
+
+.active-filter-item {
+    animation: fadeIn 0.2s ease;
+}
+
+/* Состояния загрузки */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid var(--accent1);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+
+    100% { transform: rotate(360deg); }
+}
+
+#hairColorResult,
+#hairColorResult div,
+#hairColorResult strong {
+    color: #000000 !important;
+}
+
+.tab-page,
+.tab-page div,
+.tab-page strong {
+    color: #000000 !important;
+}
+
+
+/* Улучшение видимости текста на тёмном фоне */
+
+/* Общие стили для текста */
+.tab-page {
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* Заголовки с лучшей читаемостью */
+h2 {
+  color: var(--text);
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-bottom: 1em;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  border-bottom: 2px solid var(--accent2);
+  padding-bottom: 0.5em;
+}
+
+h3 {
+  color: var(--accent2);
+  font-size: 1.2em;
+  font-weight: 500;
+  margin: 1.5em 0 0.8em 0;
+  text-shadow: 0 0 8px rgba(79, 172, 254, 0.4);
+}
+
+/* Списки формул с улучшенной видимостью */
+#rulesContent ul,
+#physicsContent ul {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1em 1em 1em 2em;
+  margin: 1em 0;
+  backdrop-filter: blur(10px);
+}
+
+#rulesContent li,
+#physicsContent li {
+  color: var(--text);
+  margin: 0.8em 0;
+  padding: 0.8em;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid var(--accent2);
+  font-family: 'Courier New', monospace;
+  font-size: 0.95em;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+#rulesContent li:hover,
+#physicsContent li:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent1);
+  transform: translateX(5px);
+  box-shadow: 0 0 15px rgba(255, 110, 199, 0.3);
+}
+
+/* Особые стили для математических формул */
+#rulesAlgebra li {
+  border-left-color: var(--accent1);
+  color: #ffb8e0; /* светлый розовый для алгебры */
+}
+
+#rulesTrig li {
+  border-left-color: var(--accent3);
+  color: #f9e8a3; /* светлый жёлтый для тригонометрии */
+}
+
+#rulesLog li {
+  border-left-color: var(--accent4);
+  color: #d9b8ff; /* светлый фиолетовый для логарифмов */
+}
+
+#rulesDerivatives li {
+  border-left-color: var(--accent2);
+  color: #a8d8ff; /* светлый голубой для производных */
+}
+
+#rulesIntegrals li {
+  border-left-color: #00ff88; /* зелёный для интегралов */
+  color: #88ffc7;
+}
+
+#rulesGeometry li {
+  border-left-color: #ffaa00; /* оранжевый для геометрии */
+  color: #ffd699;
+}
+
+#rulesCombinatorics li {
+  border-left-color: #ff4444; /* красный для комбинаторики */
+  color: #ff9999;
+}
+
+/* Стили для физических разделов */
+#physicsContent h3 {
+  color: var(--accent1);
+  border-left: 4px solid var(--accent1);
+  padding-left: 0.8em;
+}
+
+#physicsContent ul li {
+  border-left-color: var(--accent1);
+  color: #ffb8e0;
+}
+
+/* Улучшение читаемости полей ввода */
+.text-input {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 16px;
+  width: 100%;
+  margin: 0.5em 0;
+  backdrop-filter: blur(10px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.text-input:focus {
+  border-color: var(--accent2);
+  box-shadow: 0 0 20px rgba(79, 172, 254, 0.4);
+  outline: none;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Кнопки поиска */
+#searchRuleBtn,
+#searchPhysicsBtn {
+  background: linear-gradient(135deg, var(--accent2), var(--accent4));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 15px rgba(79, 172, 254, 0.4);
+}
+
+#searchRuleBtn:hover,
+#searchPhysicsBtn:hover {
+  background: linear-gradient(135deg, var(--accent1), var(--accent3));
+  box-shadow: 0 0 25px rgba(255, 110, 199, 0.6);
+}
+
+/* История вычислений */
+.history-list {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1em;
+  margin-top: 1em;
+}
+
+.history-item {
+  color: var(--accent2);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.8em;
+  margin: 0.5em 0;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.history-item:hover {
+  background: rgba(79, 172, 254, 0.2);
+  border-color: var(--accent2);
+  transform: translateX(5px);
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  #rulesContent li,
+  #physicsContent li {
+    font-size: 0.9em;
+    padding: 0.6em;
+    margin: 0.6em 0;
+  }
+  
+  h2 {
+    font-size: 1.3em;
+  }
+  
+  h3 {
+    font-size: 1.1em;
+  }
+}
+
+/* Подсветка найденных элементов при поиске */
+.highlight {
+  background: linear-gradient(135deg, var(--accent3), var(--accent1));
+  color: #000;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-shadow: none;
+}
+
+
+
+/* Убедимся, что все вводимые цифры в полях белые */
+input.text-input,
+input.num-input {
+  color: #ffffff !important;
+}
+
+input.text-input::placeholder,
+input.num-input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* История вычислений - белый текст */
+.history-item {
+  color: #ffffff !important;
+}
+
+/* Формулы в правилах - белый текст */
+#rulesContent li,
+#physicsContent li {
+  color: #ffffff !important;
+}
+
+/* Исправление цвета вводимых символов в дисплее калькулятора */
+.display {
+  color: #ffffff !important;
+  text-shadow: 0 0 15px rgba(79, 172, 254, 0.9) !important;
+  font-weight: 600 !important;
+}
+
+/* Убедимся, что все содержимое дисплея белое */
+#display,
+.display *,
+.display span,
+.display div {
+  color: #ffffff !important;
+  text-shadow: 0 0 10px rgba(79, 172, 254, 0.7) !important;
+}
+
+/* Белый текст для всех вкладок КРОМЕ colorWheel и stylistWheel */
+.tab-page:not(#colorWheel):not(#stylistWheel),
+.tab-page:not(#colorWheel):not(#stylistWheel) * {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+
+
+/* Особо убедимся, что основные вкладки белые */
+#calc,
+#graph,
+#daysCalc,
+#equation,
+#cubic,
+#system2,
+#rules,
+#physics,
+#history,
+#unitConverter,
+#calc *,
+#graph *,
+#daysCalc *,
+#equation *,
+#cubic *,
+#system2 *,
+#rules *,
+#physics *,
+#history *,
+#unitConverter * {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Дисплей калькулятора белый */
+.display,
+.display * {
+  color: #ffffff !important;
+}
+
+/* Результаты в калькуляторе, конвертере, уравнениях - белые */
+.result-box,
+.output,
+.solution,
+.answer,
+#result,
+.result,
+.calc-result,
+.converter-result,
+.equation-result {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+.result-box *,
+.output *,
+.solution *,
+.answer *,
+#result *,
+.result *,
+.calc-result *,
+.converter-result *,
+.equation-result * {
+  color: #ffffff !important;
+}
+
+/* Стили для фильтров */
+.filter-section {
+  margin: 10px 0;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.filter-header {
+  padding: 15px;
+  background: rgba(255,255,255,0.1);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.filter-header:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+.filter-toggle {
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.filter-content {
+  padding: 15px;
+  display: block;
+}
+
+.filter-content select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: #ffffff;
+  border: 2px solid rgba(255,255,255,0.3);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.filter-content select:focus {
+  outline: none;
+  border-color: #ff6ec7;
+  box-shadow: 0 0 10px rgba(255, 110, 199, 0.3);
+}
+
+.filter-content select option {
+  background: #1a1a2e;
+  color: #ffffff;
+  padding: 10px;
+}
+
+/* Кнопка сброса */
+.btn.wide {
+  background: linear-gradient(135deg, #ff6ec7, #4facfe);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn.wide:hover {
+  background: linear-gradient(135deg, #4facfe, #ff6ec7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 110, 199, 0.3);
 }
