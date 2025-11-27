@@ -413,30 +413,108 @@ accentComplement: (i, colorsArr = colors) => {
     return complementaryColor ? [baseColor, complementaryColor, ...selectedAnalogs] : [baseColor, ...selectedAnalogs];
 },
 
-// ДИАДА - 2 цвета с небольшой разницей в hue (30-60°)
+// DYAD - два противоположных цвета с небольшим смещением и соответствующими эффектами
 dyad: (i, colorsArr = colors) => {
-    const baseColor = colorsArr[i];
-    const baseHue = baseColor.hue;
+    const mainColor = colorsArr[i];
+    const mainHue = mainColor.hue;
     
-    // Ищем цвет с разницей hue 45° (±15°)
-    const targetHue = (baseHue + 45) % 360;
+    // Противоположный цвет (180°) с небольшим смещением ±10°
+    const oppositeHue = (mainHue + 170) % 360; // -10° от противоположного
     
-    let dyadColor = null;
+    let oppositeColor = null;
     let minDiff = 360;
     
     colorsArr.forEach((color, index) => {
         if (index === i) return;
         
-        let hueDiff = Math.abs(color.hue - targetHue);
-        hueDiff = Math.min(hueDiff, 360 - hueDiff);
+        let diff = Math.abs(color.hue - oppositeHue);
+        diff = Math.min(diff, 360 - diff);
         
-        if (hueDiff < minDiff) {
-            minDiff = hueDiff;
-            dyadColor = color;
+        if (diff < minDiff) {
+            minDiff = diff;
+            oppositeColor = color;
         }
     });
-    
-    return dyadColor ? [baseColor, dyadColor] : [baseColor];
+
+    // ЭФФЕКТЫ СООТВЕТСТВУЮЩИЕ ЦВЕТУ (по цветовому кругу)
+    const getColorEffects = (color) => {
+        const hue = color.hue;
+        
+        // КРАСНЫЙ сектор (330-30°)
+        if ((hue >= 330 && hue <= 360) || (hue >= 0 && hue <= 30)) {
+            return [
+                { ...color, color: shadeColor(color.color, -20), text: color.text + " (глубокий)" },
+                { ...color, color: shadeColor(color.color, 15), text: color.text + " (яркий)" },
+                { ...color, color: "#8B0000", text: "Бордовый акцент" }
+            ];
+        }
+        // ОРАНЖЕВЫЙ сектор (30-60°)
+        else if (hue > 30 && hue <= 60) {
+            return [
+                { ...color, color: shadeColor(color.color, -15), text: color.text + " (насыщенный)" },
+                { ...color, color: shadeColor(color.color, 20), text: color.text + " (светлый)" },
+                { ...color, color: "#D2691E", text: "Терракотовый" }
+            ];
+        }
+        // ЖЕЛТЫЙ сектор (60-90°)
+        else if (hue > 60 && hue <= 90) {
+            return [
+                { ...color, color: shadeColor(color.color, -10), text: color.text + " (золотистый)" },
+                { ...color, color: shadeColor(color.color, 25), text: color.text + " (лимонный)" },
+                { ...color, color: "#B8860B", text: "Тёмное золото" }
+            ];
+        }
+        // ЗЕЛЕНЫЙ сектор (90-150°)
+        else if (hue > 90 && hue <= 150) {
+            return [
+                { ...color, color: shadeColor(color.color, -10), text: color.text + " (приглушенный)" },
+                { ...color, color: shadeColor(color.color, 25), text: color.text + " (свежий)" },
+                { ...color, color: "#006400", text: "Глубокий зелёный" }
+            ];
+        }
+        // СИНИЙ сектор (150-210°)
+        else if (hue > 150 && hue <= 210) {
+            return [
+                { ...color, color: shadeColor(color.color, -25), text: color.text + " (темный)" },
+                { ...color, color: shadeColor(color.color, 10), text: color.text + " (кристальный)" },
+                { ...color, color: "#00695C", text: "Изумрудный" }
+            ];
+        }
+        // СИНИЙ-ФИОЛЕТОВЫЙ сектор (210-270°)
+        else if (hue > 210 && hue <= 270) {
+            return [
+                { ...color, color: shadeColor(color.color, -20), text: color.text + " (ночной)" },
+                { ...color, color: shadeColor(color.color, 15), text: color.text + " (небесный)" },
+                { ...color, color: "#191970", text: "Сапфировый" }
+            ];
+        }
+        // ФИОЛЕТОВЫЙ сектор (270-330°)
+        else {
+            return [
+                { ...color, color: shadeColor(color.color, -25), text: color.text + " (мистический)" },
+                { ...color, color: shadeColor(color.color, 20), text: color.text + " (лавандовый)" },
+                { ...color, color: "#4A235A", text: "Королевский фиолетовый" }
+            ];
+        }
+    };
+
+    // Применяем эффекты к каждому цвету
+    const mainEffects = getColorEffects(mainColor);
+    const oppositeEffects = oppositeColor ? getColorEffects(oppositeColor) : [];
+
+    // Возвращаем пары: оригиналы + их эффекты
+    return [
+        // Основная пара
+        mainColor,
+        oppositeColor,
+        
+        // Эффекты основного цвета
+        ...mainEffects,
+        
+        // Эффекты противоположного цвета
+        ...oppositeEffects
+        
+    ].filter(Boolean);
 },
 
   // НЕЙТРАЛЬНАЯ СХЕМА - ИСПРАВЛЕННАЯ ВЕРСИЯ
