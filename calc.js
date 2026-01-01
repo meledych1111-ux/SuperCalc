@@ -1,4 +1,4 @@
-// calc.js — исправленный, полностью рабочий калькулятор
+// calc.js — полностью рабочий калькулятор
 document.addEventListener('DOMContentLoaded', () => {
   let currentInput = "";
   let memoryValue = 0;
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Простой вычислитель с приоритетом
+  // Простой вычислитель с приоритетом **, *, /, +, -
   function evaluateSimple(expr) {
     if (!expr) return 0;
     expr = expr.replace(/\s+/g, "");
@@ -100,15 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
           tokens.push(char);
           current = "";
         }
-      } else if (char === '*' || char === '/' || char === '**') {
+      } else if (i < expr.length - 1 && char === '*' && expr[i + 1] === '*') {
         if (current !== "") tokens.push(current);
-        // Обработка **
-        if (char === '*' && expr[i + 1] === '*') {
-          tokens.push("**");
-          i++; // пропустить второй *
-        } else {
-          tokens.push(char);
-        }
+        tokens.push("**");
+        i++; // пропустить второй *
+        current = "";
+      } else if (char === '*' || char === '/') {
+        if (current !== "") tokens.push(current);
+        tokens.push(char);
         current = "";
       } else {
         current += char;
@@ -119,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tokens.length === 0) return 0;
     if (tokens.length === 1) return parseFloat(tokens[0]);
 
-    // Сначала **
+    // **
     let i = 1;
     while (i < tokens.length) {
       if (tokens[i] === "**") {
@@ -132,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Потом * и /
+    // * и /
     i = 1;
     while (i < tokens.length) {
       if (tokens[i] === "*") {
@@ -151,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Потом + и -
+    // + и -
     let result = parseFloat(tokens[0]);
     for (let j = 1; j < tokens.length; j += 2) {
       const op = tokens[j];
@@ -196,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return evaluateSimple(expr);
   }
 
-  // Парсер чистых дробей (без степеней и функций)
+  // Парсер чистых дробей
   function evaluateFractionExpression(expr) {
     if (typeof window.Fraction !== 'function') return null;
     try {
@@ -236,16 +235,15 @@ document.addEventListener('DOMContentLoaded', () => {
     return new Fraction(parseFloat(str));
   }
 
-  // ОСНОВНАЯ ФУНКЦИЯ
+  // Основная функция вычисления
   function calculateExpression(expr) {
     try {
       expr = expr.trim();
       if (!expr) return "0";
 
-      // Замена ^ на ** ВЕЗДЕ
       expr = expr.replace(/\^/g, "**");
 
-      // Проверка: чисто дроби? (без **, без функций)
+      // Проверка на чисто дробное выражение (без степеней и функций)
       const isPureFraction = 
         !expr.includes("**") &&
         !expr.match(/\b[a-z]+\(/) &&
@@ -258,12 +256,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${decStr} ≈ ${frac.toString()}`;
       }
 
-      // Всё остальное — через десятичный вычислитель
       const numResult = safeEvaluate(expr);
       if (!isFinite(numResult)) throw new Error("Недопустимый результат");
       return formatNumber(numResult);
     } catch (e) {
       return "Ошибка";
+    }
+  }
+
+  // Применить округление к выражению
+  function applyRounding() {
+    let exprToUse = currentInput.trim();
+    if (!exprToUse && history.length > 0) {
+      const last = history[0];
+      const match = last.match(/^(.+) = .+$/);
+      if (match) exprToUse = match[1];
+    }
+    if (exprToUse) {
+      const result = calculateExpression(exprToUse);
+      updateDisplay(result);
+      if (currentInput.trim()) {
+        addToHistory(exprToUse, result);
+        currentInput = "";
+      } else {
+        // Обновить последнюю запись в истории
+        if (history.length > 0) {
+          history[0] = `${exprToUse} = ${result}`;
+          renderHistory();
+        }
+      }
     }
   }
 
@@ -286,15 +307,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Равно
     if (btn.classList.contains("equal")) {
       if (!currentInput.trim()) return;
-      // Автоматически закрываем незакрытые sqrt
       let exprToCalc = currentInput;
+      // Автоматически закрыть незакрытые sqrt
       if (exprToCalc.includes("sqrt(") && !exprToCalc.endsWith(")")) {
-        // Находим последний sqrt( и закрываем его
         const lastSqrt = exprToCalc.lastIndexOf("sqrt(");
         if (lastSqrt !== -1) {
           const before = exprToCalc.substring(0, lastSqrt + 5);
           const after = exprToCalc.substring(lastSqrt + 5);
-          // Закрываем скобку в конце
           exprToCalc = before + after + ")";
         }
       }
@@ -305,24 +324,22 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Корень — вставляем sqrt(
+    // Округление
+    if (func === "fixed2") { roundingMode = "fixed"; roundingDigits = 2; applyRounding(); return; }
+    if (func === "fixed6") { roundingMode = "fixed"; roundingDigits = 6; applyRounding(); return; }
+    if (func === "sci") { roundingMode = "scientific"; roundingDigits = 6; applyRounding(); return; }
+    if (func === "precise") { roundingMode = "precise"; applyRounding(); return; }
+
+    // Корень
     if (func === "sqrt") {
       currentInput += "sqrt(";
       updateDisplay(currentInput);
       return;
     }
 
-    // x², x³
-    if (func === "square") {
-      if (currentInput !== "") currentInput += "^2";
-      updateDisplay(currentInput);
-      return;
-    }
-    if (func === "cube") {
-      if (currentInput !== "") currentInput += "^3";
-      updateDisplay(currentInput);
-      return;
-    }
+    // Степени
+    if (func === "square") { if (currentInput !== "") currentInput += "^2"; updateDisplay(currentInput); return; }
+    if (func === "cube") { if (currentInput !== "") currentInput += "^3"; updateDisplay(currentInput); return; }
 
     // Научные функции
     const sciFuncs = ["sin", "cos", "tan", "asin", "acos", "atan", "sinh", "cosh", "tanh",
@@ -370,12 +387,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Округление
-    if (func === "fixed2") { roundingMode = "fixed"; roundingDigits = 2; }
-    else if (func === "fixed6") { roundingMode = "fixed"; roundingDigits = 6; }
-    else if (func === "sci") { roundingMode = "scientific"; roundingDigits = 6; }
-    else if (func === "precise") { roundingMode = "precise"; }
-    else if (val) {
+    // Обычные символы
+    if (val) {
       currentInput += val;
       updateDisplay(currentInput);
       return;
