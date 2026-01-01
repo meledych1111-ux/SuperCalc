@@ -1,24 +1,25 @@
-// calc.js — полностью рабочий калькулятор
+// calc.js — полная версия: калькулятор, решатель уравнений, градусы
 document.addEventListener('DOMContentLoaded', () => {
+  // =============== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===============
   let currentInput = "";
   let memoryValue = 0;
   let history = [];
-  let roundingMode = "fixed"; // "fixed" | "scientific" | "precise"
+  let roundingMode = "fixed";
   let roundingDigits = 6;
+  let angleMode = "rad"; // "rad" или "deg"
 
-  // DOM
+  // =============== DOM ===============
   const display = document.getElementById("display");
   const toggleSciBtn = document.getElementById("toggleSciBtn");
   const sciBlock = document.getElementById("sciFunctions");
   const clearHistoryBtn = document.getElementById("clearHistoryBtn");
   const historyList = document.getElementById("historyList");
 
-  // Обновление дисплея
+  // =============== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===============
   function updateDisplay(val) {
     display.textContent = val === "" ? "0" : val;
   }
 
-  // История
   function renderHistory() {
     if (historyList) {
       historyList.innerHTML = history.map(item => `<li>${item}</li>`).join("");
@@ -39,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (clearHistoryBtn) clearHistoryBtn.addEventListener("click", clearHistory);
 
-  // Форматирование числа
   function formatNumber(value) {
     if (typeof value !== 'number' || !isFinite(value)) return "Ошибка";
     if (Number.isInteger(value)) return String(value);
@@ -48,14 +48,23 @@ document.addEventListener('DOMContentLoaded', () => {
     return String(value);
   }
 
-  // Математические функции
+  // =============== НАУЧНЫЕ ФУНКЦИИ С ГРАДУСАМИ ===============
   const mathFunctions = {
-    sin: x => Math.sin(x),
-    cos: x => Math.cos(x),
-    tan: x => Math.tan(x),
-    asin: x => Math.asin(x),
-    acos: x => Math.acos(x),
-    atan: x => Math.atan(x),
+    sin: x => Math.sin(angleMode === "deg" ? x * Math.PI / 180 : x),
+    cos: x => Math.cos(angleMode === "deg" ? x * Math.PI / 180 : x),
+    tan: x => Math.tan(angleMode === "deg" ? x * Math.PI / 180 : x),
+    asin: x => {
+      const res = Math.asin(x);
+      return angleMode === "deg" ? res * 180 / Math.PI : res;
+    },
+    acos: x => {
+      const res = Math.acos(x);
+      return angleMode === "deg" ? res * 180 / Math.PI : res;
+    },
+    atan: x => {
+      const res = Math.atan(x);
+      return angleMode === "deg" ? res * 180 / Math.PI : res;
+    },
     sinh: x => Math.sinh(x),
     cosh: x => Math.cosh(x),
     tanh: x => Math.tanh(x),
@@ -76,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Простой вычислитель с приоритетом **, *, /, +, -
+  // =============== ВЫЧИСЛИТЕЛЬ ===============
   function evaluateSimple(expr) {
     if (!expr) return 0;
     expr = expr.replace(/\s+/g, "");
@@ -103,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (i < expr.length - 1 && char === '*' && expr[i + 1] === '*') {
         if (current !== "") tokens.push(current);
         tokens.push("**");
-        i++; // пропустить второй *
+        i++;
         current = "";
       } else if (char === '*' || char === '/') {
         if (current !== "") tokens.push(current);
@@ -150,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // + и -
     let result = parseFloat(tokens[0]);
     for (let j = 1; j < tokens.length; j += 2) {
       const op = tokens[j];
@@ -162,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return result;
   }
 
-  // Рекурсивный вычислитель
   function safeEvaluate(expr) {
     expr = expr.trim();
     if (!expr) return 0;
@@ -171,7 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
       .replace(/÷/g, "/")
       .replace(/π/g, "pi")
       .replace(/\bpi\b/g, String(Math.PI))
-      .replace(/\be\b/g, String(Math.E));
+      .replace(/\be\b/g, String(Math.E))
+      .replace(/\bx\b/g, "NaN");
 
     let changed;
     do {
@@ -195,7 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return evaluateSimple(expr);
   }
 
-  // Парсер чистых дробей
   function evaluateFractionExpression(expr) {
     if (typeof window.Fraction !== 'function') return null;
     try {
@@ -235,7 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return new Fraction(parseFloat(str));
   }
 
-  // Основная функция вычисления
   function calculateExpression(expr) {
     try {
       expr = expr.trim();
@@ -243,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       expr = expr.replace(/\^/g, "**");
 
-      // Проверка на чисто дробное выражение (без степеней и функций)
       const isPureFraction = 
         !expr.includes("**") &&
         !expr.match(/\b[a-z]+\(/) &&
@@ -264,7 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Применить округление к выражению
   function applyRounding() {
     let exprToUse = currentInput.trim();
     if (!exprToUse && history.length > 0) {
@@ -279,7 +283,6 @@ document.addEventListener('DOMContentLoaded', () => {
         addToHistory(exprToUse, result);
         currentInput = "";
       } else {
-        // Обновить последнюю запись в истории
         if (history.length > 0) {
           history[0] = `${exprToUse} = ${result}`;
           renderHistory();
@@ -288,12 +291,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Обработка кнопок
+  // =============== ОБРАБОТКА КНОПОК КАЛЬКУЛЯТОРА ===============
   function handleButtonClick(btn) {
     const val = btn.dataset.value;
     const func = btn.dataset.func;
 
-    // Память
     if (btn.classList.contains("memory")) {
       const num = parseFloat(currentInput || "0") || 0;
       switch (func) {
@@ -304,11 +306,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Равно
     if (btn.classList.contains("equal")) {
       if (!currentInput.trim()) return;
       let exprToCalc = currentInput;
-      // Автоматически закрыть незакрытые sqrt
       if (exprToCalc.includes("sqrt(") && !exprToCalc.endsWith(")")) {
         const lastSqrt = exprToCalc.lastIndexOf("sqrt(");
         if (lastSqrt !== -1) {
@@ -324,24 +324,29 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Округление
     if (func === "fixed2") { roundingMode = "fixed"; roundingDigits = 2; applyRounding(); return; }
     if (func === "fixed6") { roundingMode = "fixed"; roundingDigits = 6; applyRounding(); return; }
     if (func === "sci") { roundingMode = "scientific"; roundingDigits = 6; applyRounding(); return; }
     if (func === "precise") { roundingMode = "precise"; applyRounding(); return; }
 
-    // Корень
+    if (func === "toggleDeg") {
+      angleMode = angleMode === "deg" ? "rad" : "deg";
+      const degBtn = document.querySelector('.btn[data-func="toggleDeg"]');
+      if (degBtn) {
+        degBtn.textContent = angleMode === "deg" ? "Градусы ✓" : "Градусы";
+      }
+      return;
+    }
+
     if (func === "sqrt") {
       currentInput += "sqrt(";
       updateDisplay(currentInput);
       return;
     }
 
-    // Степени
     if (func === "square") { if (currentInput !== "") currentInput += "^2"; updateDisplay(currentInput); return; }
     if (func === "cube") { if (currentInput !== "") currentInput += "^3"; updateDisplay(currentInput); return; }
 
-    // Научные функции
     const sciFuncs = ["sin", "cos", "tan", "asin", "acos", "atan", "sinh", "cosh", "tanh",
       "log10", "ln", "log2", "exp", "abs", "ceil", "floor", "round", "factorial"];
     if (func && sciFuncs.includes(func)) {
@@ -350,7 +355,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Константы
     if (btn.classList.contains("const")) {
       const last = currentInput.slice(-1);
       const needsMult = last !== '' && !"+-*/(".includes(last);
@@ -359,7 +363,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Смена знака
     if (btn.classList.contains("sign")) {
       if (currentInput === "") return;
       const parts = currentInput.split(/([+\-*\/^()])/);
@@ -373,21 +376,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Backspace
     if (btn.classList.contains("backspace")) {
       currentInput = currentInput.slice(0, -1);
       updateDisplay(currentInput);
       return;
     }
 
-    // Очистка
     if (btn.classList.contains("clear")) {
       currentInput = "";
       updateDisplay("0");
       return;
     }
 
-    // Обычные символы
     if (val) {
       currentInput += val;
       updateDisplay(currentInput);
@@ -395,12 +395,148 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Назначение обработчиков
+  // =============== РЕШАТЕЛЬ УРАВНЕНИЙ ===============
+  // Квадратные уравнения
+  function solveQuadratic() {
+    const a = parseFloat(document.getElementById("eqA").value);
+    const b = parseFloat(document.getElementById("eqB").value);
+    const c = parseFloat(document.getElementById("eqC").value);
+    const resultDiv = document.getElementById("equationResult");
+
+    if (isNaN(a) || isNaN(b) || isNaN(c)) {
+      resultDiv.textContent = "Ошибка: введите числа";
+      return;
+    }
+
+    if (Math.abs(a) < 1e-12) {
+      resultDiv.textContent = "Ошибка: a ≠ 0";
+      return;
+    }
+
+    const D = b * b - 4 * a * c;
+    if (D > 0) {
+      const x1 = (-b + Math.sqrt(D)) / (2 * a);
+      const x2 = (-b - Math.sqrt(D)) / (2 * a);
+      resultDiv.textContent = `D = ${D}\nx₁ = ${x1.toFixed(6)}\nx₂ = ${x2.toFixed(6)}`;
+    } else if (Math.abs(D) < 1e-12) {
+      const x = -b / (2 * a);
+      resultDiv.textContent = `D = 0\nx = ${x.toFixed(6)}`;
+    } else {
+      const real = -b / (2 * a);
+      const imag = Math.sqrt(-D) / (2 * a);
+      resultDiv.textContent = `D = ${D} < 0\nКомплексные корни:\nx = ${real.toFixed(6)} ± ${imag.toFixed(6)}i`;
+    }
+  }
+
+  function clearQuadratic() {
+    document.getElementById("eqA").value = "1";
+    document.getElementById("eqB").value = "0";
+    document.getElementById("eqC").value = "0";
+    document.getElementById("equationResult").textContent = "—";
+  }
+
+  // Кубические уравнения — простой численный метод (для целых корней)
+  function solveCubic() {
+    const a = parseFloat(document.getElementById("cA").value);
+    const b = parseFloat(document.getElementById("cB").value);
+    const c = parseFloat(document.getElementById("cC").value);
+    const d = parseFloat(document.getElementById("cD").value);
+    const resultDiv = document.getElementById("cubicResult");
+
+    if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
+      resultDiv.textContent = "Ошибка: введите числа";
+      return;
+    }
+
+    if (Math.abs(a) < 1e-12) {
+      resultDiv.textContent = "Ошибка: a ≠ 0";
+      return;
+    }
+
+    // Попробуем найти целый корень методом подбора
+    const roots = [];
+    const possible = [];
+    for (let i = -100; i <= 100; i++) {
+      if (i === 0) continue;
+      if (Math.abs(d % i) < 1e-9) possible.push(i);
+    }
+    possible.push(0);
+    for (let r of possible) {
+      const val = a * r**3 + b * r**2 + c * r + d;
+      if (Math.abs(val) < 1e-9) {
+        roots.push(r);
+        break;
+      }
+    }
+
+    if (roots.length > 0) {
+      const r1 = roots[0];
+      // Деление многочлена
+      const A = a;
+      const B = b + A * r1;
+      const C = c + B * r1;
+      // Решаем квадратное уравнение
+      const D = B * B - 4 * A * C;
+      if (D >= 0) {
+        const r2 = (-B + Math.sqrt(D)) / (2 * A);
+        const r3 = (-B - Math.sqrt(D)) / (2 * A);
+        resultDiv.textContent = `Корни:\nx₁ = ${r1}\nx₂ = ${r2.toFixed(6)}\nx₃ = ${r3.toFixed(6)}`;
+      } else {
+        const real = -B / (2 * A);
+        const imag = Math.sqrt(-D) / (2 * A);
+        resultDiv.textContent = `Один вещественный корень:\nx₁ = ${r1}\nКомплексные:\nx = ${real.toFixed(6)} ± ${imag.toFixed(6)}i`;
+      }
+    } else {
+      resultDiv.textContent = "Не найдено целых корней. Используйте численные методы.";
+    }
+  }
+
+  function clearCubic() {
+    document.getElementById("cA").value = "1";
+    document.getElementById("cB").value = "0";
+    document.getElementById("cC").value = "0";
+    document.getElementById("cD").value = "0";
+    document.getElementById("cubicResult").textContent = "—";
+  }
+
+  // Система 2x2
+  function solveSystem2() {
+    const a1 = parseFloat(document.getElementById("sA1").value);
+    const b1 = parseFloat(document.getElementById("sB1").value);
+    const c1 = parseFloat(document.getElementById("sC1").value);
+    const a2 = parseFloat(document.getElementById("sA2").value);
+    const b2 = parseFloat(document.getElementById("sB2").value);
+    const c2 = parseFloat(document.getElementById("sC2").value);
+    const resultDiv = document.getElementById("system2Result");
+
+    if (isNaN(a1) || isNaN(b1) || isNaN(c1) || isNaN(a2) || isNaN(b2) || isNaN(c2)) {
+      resultDiv.textContent = "Ошибка: введите числа";
+      return;
+    }
+
+    const det = a1 * b2 - a2 * b1;
+    if (Math.abs(det) < 1e-12) {
+      resultDiv.textContent = "Система не имеет единственного решения (Δ = 0)";
+    } else {
+      const x = (c1 * b2 - c2 * b1) / det;
+      const y = (a1 * c2 - a2 * c1) / det;
+      resultDiv.textContent = `Δ = ${det.toFixed(6)}\nx = ${x.toFixed(6)}\ny = ${y.toFixed(6)}`;
+    }
+  }
+
+  function clearSystem2() {
+    ["sA1", "sB1", "sC1", "sA2", "sB2", "sC2"].forEach(id => {
+      document.getElementById(id).value = "";
+    });
+    document.getElementById("system2Result").textContent = "—";
+  }
+
+  // =============== ИНИЦИАЛИЗАЦИЯ ===============
+  // Калькулятор
   document.querySelectorAll("#calc .btn").forEach(btn => {
     btn.addEventListener("click", () => handleButtonClick(btn));
   });
 
-  // Научные функции
   if (toggleSciBtn && sciBlock) {
     toggleSciBtn.addEventListener("click", () => {
       sciBlock.classList.toggle("hidden");
@@ -409,6 +545,18 @@ document.addEventListener('DOMContentLoaded', () => {
         : "Научные функции ⬆";
     });
   }
+
+  // Решатель уравнений
+  document.getElementById("solveQuadratic")?.addEventListener("click", solveQuadratic);
+  document.getElementById("clearQuadratic")?.addEventListener("click", clearQuadratic);
+  document.getElementById("solveCubic")?.addEventListener("click", solveCubic);
+  document.getElementById("clearCubic")?.addEventListener("click", clearCubic);
+  document.getElementById("solveSystem2")?.addEventListener("click", solveSystem2);
+  document.getElementById("clearSystem2")?.addEventListener("click", clearSystem2);
+
+  // Градусы
+  const degBtn = document.querySelector('.btn[data-func="toggleDeg"]');
+  if (degBtn) degBtn.textContent = "Градусы";
 
   updateDisplay("0");
 });
