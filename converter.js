@@ -64,9 +64,16 @@ document.getElementById("convertBtn").addEventListener("click", function() {
     return;
   }
 
+  // Если единицы совпадают — ничего не делаем
+  if (from === to) {
+    const fromLabel = unitLabels[from] || from;
+    document.getElementById("convertResult").textContent = `${val} ${fromLabel} = ${val} ${fromLabel}`;
+    return;
+  }
+
   let result = val;
 
-  // Температура
+  // =============== Температура ===============
   if (cat === "temperature") {
     if (from === "C" && to === "F") result = val * 9/5 + 32;
     else if (from === "F" && to === "C") result = (val - 32) * 5/9;
@@ -76,68 +83,81 @@ document.getElementById("convertBtn").addEventListener("click", function() {
     else if (from === "K" && to === "F") result = (val - 273.15) * 9/5 + 32;
   }
 
-  // Масса
-  if (cat === "mass") {
-    if (from === "kg" && to === "g") result = val * 1000;
-    else if (from === "g" && to === "kg") result = val / 1000;
-    else if (from === "g" && to === "mg") result = val * 1000;
-    else if (from === "mg" && to === "g") result = val / 1000;
-    else if (from === "kg" && to === "mg") result = val * 1000000;
-    else if (from === "mg" && to === "kg") result = val / 1000000;
-    else if (from === "kg" && to === "t") result = val / 1000;
-    else if (from === "t" && to === "kg") result = val * 1000;
-    else if (from === "g" && to === "t") result = val / 1000000;
-    else if (from === "t" && to === "g") result = val * 1000000;
-    else if (from === "kg" && to === "lb") result = val * 2.20462;
-    else if (from === "lb" && to === "kg") result = val / 2.20462;
-    else if (from === "g" && to === "lb") result = val / 453.59237;
-    else if (from === "lb" && to === "g") result = val * 453.59237;
+  // =============== Масса ===============
+  else if (cat === "mass") {
+    // Приведём всё к граммам, потом в целевую единицу
+    let grams;
+    if (from === "kg") grams = val * 1000;
+    else if (from === "g") grams = val;
+    else if (from === "mg") grams = val / 1000;
+    else if (from === "t") grams = val * 1000000;
+    else if (from === "lb") grams = val * 453.59237;
+
+    if (to === "kg") result = grams / 1000;
+    else if (to === "g") result = grams;
+    else if (to === "mg") result = grams * 1000;
+    else if (to === "t") result = grams / 1000000;
+    else if (to === "lb") result = grams / 453.59237;
   }
 
-  // Длина
-  if (cat === "length") {
-    if (from === "m" && to === "cm") result = val * 100;
-    else if (from === "cm" && to === "m") result = val / 100;
-    else if (from === "m" && to === "km") result = val / 1000;
-    else if (from === "km" && to === "m") result = val * 1000;
-    else if (from === "m" && to === "mile") result = val / 1609.34;
-    else if (from === "mile" && to === "m") result = val * 1609.34;
-    else if (from === "cm" && to === "km") result = val / 100000;
-    else if (from === "km" && to === "cm") result = val * 100000;
+  // =============== Длина ===============
+  else if (cat === "length") {
+    // Приведём всё к метрам
+    let meters;
+    if (from === "m") meters = val;
+    else if (from === "cm") meters = val / 100;
+    else if (from === "km") meters = val * 1000;
+    else if (from === "mile") meters = val * 1609.34;
+
+    if (to === "m") result = meters;
+    else if (to === "cm") result = meters * 100;
+    else if (to === "km") result = meters / 1000;
+    else if (to === "mile") result = meters / 1609.34;
   }
 
-  // Площадь
-  if (cat === "area") {
-    if (from === "m2" && to === "cm2") result = val * 10000;
-    else if (from === "cm2" && to === "m2") result = val / 10000;
-    else if (from === "ha" && to === "m2") result = val * 10000;
-    else if (from === "m2" && to === "ha") result = val / 10000;
-    else if (from === "km2" && to === "m2") result = val * 1000000;
-    else if (from === "m2" && to === "km2") result = val / 1000000;
-    else if (from === "ha" && to === "km2") result = val / 100;
-    else if (from === "km2" && to === "ha") result = val * 100;
+  // =============== Площадь ===============
+  else if (cat === "area") {
+    // Приведём всё к кв. метрам
+    let m2;
+    if (from === "m2") m2 = val;
+    else if (from === "cm2") m2 = val / 10000;
+    else if (from === "ha") m2 = val * 10000;
+    else if (from === "km2") m2 = val * 1000000;
+
+    if (to === "m2") result = m2;
+    else if (to === "cm2") result = m2 * 10000;
+    else if (to === "ha") result = m2 / 10000;
+    else if (to === "km2") result = m2 / 1000000;
   }
 
-  // Объём (кулинарный)
-  if (cat === "volume") {
-    if (from === "l" && to === "ml") result = val * 1000;
-    else if (from === "ml" && to === "l") result = val / 1000;
-    else if (from === "cup" && to === "ml") result = val * 250;
-    else if (from === "ml" && to === "cup") result = val / 250;
-    else if (from === "tbsp" && to === "ml") result = val * 15;
-    else if (from === "ml" && to === "tbsp") result = val / 15;
-    else if (from === "tsp" && to === "ml") result = val * 5;
-    else if (from === "ml" && to === "tsp") result = val / 5;
+  // =============== Объём (кулинарный) ===============
+  else if (cat === "volume") {
+    // Приведём всё к миллилитрам
+    let ml;
+    if (from === "ml") ml = val;
+    else if (from === "l") ml = val * 1000;
+    else if (from === "cup") ml = val * 250;
+    else if (from === "tbsp") ml = val * 15;
+    else if (from === "tsp") ml = val * 5;
+
+    if (to === "ml") result = ml;
+    else if (to === "l") result = ml / 1000;
+    else if (to === "cup") result = ml / 250;
+    else if (to === "tbsp") result = ml / 15;
+    else if (to === "tsp") result = ml / 5;
   }
 
-  // Кубические единицы
-  if (cat === "cubic") {
-    if (from === "m3" && to === "cm3") result = val * 1000000;
-    else if (from === "cm3" && to === "m3") result = val / 1000000;
-    else if (from === "m3" && to === "l") result = val * 1000;
-    else if (from === "l" && to === "m3") result = val / 1000;
-    else if (from === "cm3" && to === "l") result = val / 1000;
-    else if (from === "l" && to === "cm3") result = val * 1000;
+  // =============== Кубические единицы ===============
+  else if (cat === "cubic") {
+    // Приведём всё к куб. сантиметрам (см³ = мл)
+    let cm3;
+    if (from === "cm3") cm3 = val;
+    else if (from === "m3") cm3 = val * 1000000;
+    else if (from === "l") cm3 = val * 1000;
+
+    if (to === "cm3") result = cm3;
+    else if (to === "m3") result = cm3 / 1000000;
+    else if (to === "l") result = cm3 / 1000;
   }
 
   const fromLabel = unitLabels[from] || from;
@@ -148,9 +168,5 @@ document.getElementById("convertBtn").addEventListener("click", function() {
     `${val} ${fromLabel} = ${formatted} ${toLabel}`;
 });
 
-
 // инициализация при загрузке
 document.getElementById("category").dispatchEvent(new Event("change"));
-
-
- 
