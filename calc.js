@@ -1,4 +1,4 @@
-// calc.js — полная версия: калькулятор, решатель уравнений, градусы
+// calc.js — полная версия с исправленным парсером дробей
 document.addEventListener('DOMContentLoaded', () => {
   // =============== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===============
   let currentInput = "";
@@ -203,30 +203,45 @@ document.addEventListener('DOMContentLoaded', () => {
     return evaluateSimple(expr);
   }
 
+  // === ИСПРАВЛЕННЫЙ ПАРСЕР ДРОБЕЙ ===
   function evaluateFractionExpression(expr) {
     if (typeof window.Fraction !== 'function') return null;
     try {
       expr = expr.replace(/\s+/g, "");
-      const raw = expr.split(/([+\-*\/])/).filter(t => t);
-      const tokens = [];
-      for (let i = 0; i < raw.length; i++) {
-        const t = raw[i];
-        if ((t === "+" || t === "-") && (i === 0 || /[+\-*\/]/.test(raw[i - 1]))) {
-          tokens.push(t + (raw[i + 1] || "0"));
-          i++;
-        } else {
-          tokens.push(t);
-        }
+      
+      // Поддерживаем ТОЛЬКО: a/b ± c/d ± ...
+      if (!/^\d+\/\d+([+-]\d+\/\d+)*$/.test(expr)) {
+        return null;
       }
-      if (tokens.length === 0) return new Fraction(0);
-      let result = parseToFraction(tokens[0]);
-      for (let i = 1; i < tokens.length; i += 2) {
-        const op = tokens[i];
-        const right = parseToFraction(tokens[i + 1]);
-        if (op === "+") result = result.add(right);
-        else if (op === "-") result = result.sub(right);
-        else if (op === "*") result = result.mul(right);
-        else if (op === "/") result = result.div(right);
+
+      const parts = expr.split(/([+-])/);
+      let result = null;
+
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (!part) continue;
+
+        if (part === '+') {
+          continue;
+        } else if (part === '-') {
+          const nextPart = parts[++i];
+          if (!nextPart || !nextPart.includes('/')) return null;
+          const [n, d] = nextPart.split('/');
+          const frac = new Fraction(parseFloat(n), parseFloat(d));
+          if (result === null) {
+            result = new Fraction(0).sub(frac);
+          } else {
+            result = result.sub(frac);
+          }
+        } else if (part.includes('/')) {
+          const [n, d] = part.split('/');
+          const frac = new Fraction(parseFloat(n), parseFloat(d));
+          if (result === null) {
+            result = frac;
+          } else {
+            result = result.add(frac);
+          }
+        }
       }
       return result;
     } catch (e) {
@@ -249,10 +264,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       expr = expr.replace(/\^/g, "**");
 
+      // ИСПРАВЛЕННАЯ ПРОВЕРКА НА ЧИСТУЮ ДРОБЬ
       const isPureFraction = 
         !expr.includes("**") &&
         !expr.match(/\b[a-z]+\(/) &&
-        /^\s*\d+\s*\/\s*\d+\s*([+\-*\/]\s*\d+\s*\/\s*\d+\s*)*$/g.test(expr.replace(/\s+/g, ""));
+        /^\d+\/\d+([+-]\d+\/\d+)*$/.test(expr);
 
       if (isPureFraction && typeof window.Fraction === 'function') {
         const frac = evaluateFractionExpression(expr);
@@ -396,7 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =============== РЕШАТЕЛЬ УРАВНЕНИЙ ===============
-  // Квадратные уравнения
   function solveQuadratic() {
     const a = parseFloat(document.getElementById("eqA").value);
     const b = parseFloat(document.getElementById("eqB").value);
@@ -435,7 +450,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("equationResult").textContent = "—";
   }
 
-  // Кубические уравнения — простой численный метод (для целых корней)
   function solveCubic() {
     const a = parseFloat(document.getElementById("cA").value);
     const b = parseFloat(document.getElementById("cB").value);
@@ -453,7 +467,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Попробуем найти целый корень методом подбора
     const roots = [];
     const possible = [];
     for (let i = -100; i <= 100; i++) {
@@ -471,11 +484,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (roots.length > 0) {
       const r1 = roots[0];
-      // Деление многочлена
       const A = a;
       const B = b + A * r1;
       const C = c + B * r1;
-      // Решаем квадратное уравнение
       const D = B * B - 4 * A * C;
       if (D >= 0) {
         const r2 = (-B + Math.sqrt(D)) / (2 * A);
@@ -499,7 +510,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("cubicResult").textContent = "—";
   }
 
-  // Система 2x2
   function solveSystem2() {
     const a1 = parseFloat(document.getElementById("sA1").value);
     const b1 = parseFloat(document.getElementById("sB1").value);
@@ -532,7 +542,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =============== ИНИЦИАЛИЗАЦИЯ ===============
-  // Калькулятор
   document.querySelectorAll("#calc .btn").forEach(btn => {
     btn.addEventListener("click", () => handleButtonClick(btn));
   });
@@ -546,7 +555,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Решатель уравнений
   document.getElementById("solveQuadratic")?.addEventListener("click", solveQuadratic);
   document.getElementById("clearQuadratic")?.addEventListener("click", clearQuadratic);
   document.getElementById("solveCubic")?.addEventListener("click", solveCubic);
@@ -554,7 +562,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById("solveSystem2")?.addEventListener("click", solveSystem2);
   document.getElementById("clearSystem2")?.addEventListener("click", clearSystem2);
 
-  // Градусы
   const degBtn = document.querySelector('.btn[data-func="toggleDeg"]');
   if (degBtn) degBtn.textContent = "Градусы";
 
