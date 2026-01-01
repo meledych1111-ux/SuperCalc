@@ -5,6 +5,12 @@
   <title>Мобильный калькулятор PWA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
   <link rel="manifest" href="manifest.json">
+  <style>
+    /* Обязательное правило для скрытия научных функций */
+    .hidden {
+      display: none !important;
+    }
+  </style>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -110,7 +116,7 @@
           <button class="btn func" data-func="ln">ln</button>
           <button class="btn func" data-func="log2">log₂</button>
           <button class="btn func" data-func="exp">exp</button>
-          <button class="btn func" data-func="percent">%</button>
+          <button class="btn operator" data-value="*0.01">%</button>
           <button class="btn func" data-func="round">≈</button>
           <button class="btn func" data-func="floor">⌊x⌋</button>
           <button class="btn func" data-func="ceil">⌈x⌉</button>
@@ -193,7 +199,7 @@
         <div class="hint">
           <strong>Пример:</strong> x² - 3x + 2 = 0 → корни: 1 и 2<br>
           <strong>Правила:</strong> уравнение имеет вид ax²+bx+c=0, a ≠ 0, дискриминант D=b²-4ac.
-        
+        </div>
       </div>
     </section>
 
@@ -212,7 +218,7 @@
         <div class="hint">
           <strong>Пример:</strong> x³ - 6x² + 11x - 6 = 0 → корни: 1, 2, 3<br>
           <strong>Правила:</strong> уравнение имеет вид ax³+bx²+cx+d=0, a ≠ 0, решение по формулам Кардано.
-        
+        </div>
       </div>
     </section>
 
@@ -235,440 +241,385 @@
           <strong>Правила:</strong> Δ = a₁b₂ − a₂b₁.<br>
           Если Δ = 0 → нет решений или бесконечно много.<br>
           Если Δ ≠ 0 → решение по формулам Крамера.
-      
+        </div>
       </div>
     </section>
 
-
-<!-- Парикмахерский круг -->
-<section class="tab-page active" id="colorWheel">
-    <h2>Парикмахерский цветовой круг</h2>
-    <!-- ВАЖНО: правильный id -->
-    <canvas id="hairColorWheel" width="400" height="400"></canvas>
-    <div id="hairColorResult" style="margin: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px;">—</div>
-    
-    <div style="margin-top: 15px; display: flex; gap: 10px;">
+    <!-- Парикмахерский круг -->
+    <section class="tab-page" id="colorWheel">
+      <h2>Парикмахерский цветовой круг</h2>
+      <canvas id="hairColorWheel" width="400" height="400"></canvas>
+      <div id="hairColorResult" style="margin: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px;">—</div>
+      
+      <div style="margin-top: 15px; display: flex; gap: 10px;">
         <button onclick="resetHairColorSelection()">Сбросить выбор</button>
         <button onclick="showHairLevelsTable()">Показать таблицу уровней</button>
-    </div>
-    
-    <div class="hint" style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 5px;">
+      </div>
+      
+      <div class="hint" style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 5px;">
         <strong>Назначение:</strong> подбор оттенков и нейтрализация.<br>
         <strong>Цифры на круге:</strong> уровни тонов волос (1-10)<br>
         <strong>1 - Черный, 10 - Светлейший блондин</strong>
-   
       </div>
     </section>
 
+    <!-- Цветовой круг для стилистов -->
+    <section class="tab-page" id="stylistWheel">
+      <h2>Цветовой круг для стилистов</h2>
+      <canvas id="stylistColorWheel" width="450" height="450"></canvas>
+      <div id="stylistColorResult" class="out">—</div>
+      <div id="colorScheme" class="color-scheme-container" style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;"></div>
 
-<!-- Цветовой круг для стилистов -->
-<section class="tab-page" id="stylistWheel">
-  <h2>Цветовой круг для стилистов</h2>
-  <!-- важно задать размеры canvas -->
-  <canvas id="stylistColorWheel" width="450" height="450"></canvas>
-  <div id="stylistColorResult" class="out">—</div>
-<!-- Контейнер для цветовой схемы -->
-  <div id="colorScheme" class="color-scheme-container" style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;"></div>
-
-
- 
-<!-- АККОРДЕОН С ПРАВИЛЬНОЙ СТРУКТУРОЙ -->
-<div class="schemes-panel">
-    <!-- Основные гармонии -->
-    <div class="accordion-section">
-        <div class="accordion-header" onclick="toggleAccordion('basicHarmonies')">
+      <!-- АККОРДЕОН -->
+      <div class="schemes-panel">
+        <div class="accordion-section">
+          <div class="accordion-header" onclick="toggleAccordion('basicHarmonies')">
             <h3>Основные гармонии</h3>
             <span class="accordion-arrow">▼</span>
-        </div>
-        <div id="basicHarmonies" class="accordion-content">
+          </div>
+          <div id="basicHarmonies" class="accordion-content">
             <div class="controls-group">
-                <button class="btn func" onclick="showScheme('soft')">Мягкая гармония</button>
-                <button class="btn func" onclick="showScheme('splitTriad')">Разделенная триада</button>
-                <button class="btn func" onclick="showScheme('fresh')">Свежая схема</button>
-                <button class="btn func" onclick="showScheme('romantic')">Романтическая</button>
+              <button class="btn func" onclick="showScheme('soft')">Мягкая гармония</button>
+              <button class="btn func" onclick="showScheme('splitTriad')">Разделенная триада</button>
+              <button class="btn func" onclick="showScheme('fresh')">Свежая схема</button>
+              <button class="btn func" onclick="showScheme('romantic')">Романтическая</button>
             </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Стилевые схемы -->
-    <div class="accordion-section">
-        <div class="accordion-header" onclick="toggleAccordion('styleSchemes')">
+        <div class="accordion-section">
+          <div class="accordion-header" onclick="toggleAccordion('styleSchemes')">
             <h3>Стилевые схемы</h3>
             <span class="accordion-arrow">▼</span>
-        </div>
-        <div id="styleSchemes" class="accordion-content">
+          </div>
+          <div id="styleSchemes" class="accordion-content">
             <div class="controls-group">
-                <button class="btn func" onclick="showScheme('bright')">Яркая схема</button>
-                <button class="btn func" onclick="showScheme('casual')">Повседневная</button>
-                <button class="btn func" onclick="showScheme('evening')">Вечерняя</button>
-                <button class="btn func" onclick="showScheme('business')">Деловая</button>
-                <button class="btn func" onclick="showScheme('creative')">Креативная</button>
+              <button class="btn func" onclick="showScheme('bright')">Яркая схема</button>
+              <button class="btn func" onclick="showScheme('casual')">Повседневная</button>
+              <button class="btn func" onclick="showScheme('evening')">Вечерняя</button>
+              <button class="btn func" onclick="showScheme('business')">Деловая</button>
+              <button class="btn func" onclick="showScheme('creative')">Креативная</button>
             </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Классические схемы -->
-    <div class="accordion-section">
-        <div class="accordion-header" onclick="toggleAccordion('classicSchemes')">
+        <div class="accordion-section">
+          <div class="accordion-header" onclick="toggleAccordion('classicSchemes')">
             <h3>Классические схемы</h3>
             <span class="accordion-arrow">▼</span>
-        </div>
-        <div id="classicSchemes" class="accordion-content">
+          </div>
+          <div id="classicSchemes" class="accordion-content">
             <div class="controls-group">
-                <button class="btn func" onclick="showScheme('analog')">Аналоговая</button>
-                <button class="btn func" onclick="showScheme('complement')">Комплементарная</button>
-                <button class="btn func" onclick="showScheme('triad')">Триада</button>
-                <button class="btn func" onclick="showScheme('dyad')">Диада</button>
-                <button class="btn func" onclick="showScheme('monochrome')">Монохромная</button>
-                <button class="btn func" onclick="showScheme('neutral')">Нейтральная</button>
+              <button class="btn func" onclick="showScheme('analog')">Аналоговая</button>
+              <button class="btn func" onclick="showScheme('complement')">Комплементарная</button>
+              <button class="btn func" onclick="showScheme('triad')">Триада</button>
+              <button class="btn func" onclick="showScheme('dyad')">Диада</button>
+              <button class="btn func" onclick="showScheme('monochrome')">Монохромная</button>
+              <button class="btn func" onclick="showScheme('neutral')">Нейтральная</button>
             </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Расширенные схемы -->
-    <div class="accordion-section">
-        <div class="accordion-header" onclick="toggleAccordion('advancedSchemes')">
+        <div class="accordion-section">
+          <div class="accordion-header" onclick="toggleAccordion('advancedSchemes')">
             <h3>Расширенные схемы</h3>
             <span class="accordion-arrow">▼</span>
-        </div>
-        <div id="advancedSchemes" class="accordion-content">
+          </div>
+          <div id="advancedSchemes" class="accordion-content">
             <div class="controls-group">
-                <button class="btn func" onclick="showScheme('splitComplement')">Split Complement</button>
-                <button class="btn func" onclick="showScheme('tetradic')">Тетрада</button>
-                <button class="btn func" onclick="showScheme('accentComplement')">Акцентная комплементарная</button>
-                <button class="btn func" onclick="showScheme('tonal')">Тональная</button>
-                <button class="btn func" onclick="showScheme('pentadic')">Пентада</button>
-                <button class="btn func" onclick="showScheme('accentTriad')">Акцентная триада</button>
-                <button class="btn func" onclick="showScheme('contrastAnalogous')">Контрастная аналогия</button>
-                <button class="btn func" onclick="showScheme('tintedComplement')">Tinted Complement</button>
+              <button class="btn func" onclick="showScheme('splitComplement')">Split Complement</button>
+              <button class="btn func" onclick="showScheme('tetradic')">Тетрада</button>
+              <button class="btn func" onclick="showScheme('accentComplement')">Акцентная комплементарная</button>
+              <button class="btn func" onclick="showScheme('tonal')">Тональная</button>
+              <button class="btn func" onclick="showScheme('pentadic')">Пентада</button>
+              <button class="btn func" onclick="showScheme('accentTriad')">Акцентная триада</button>
+              <button class="btn func" onclick="showScheme('contrastAnalogous')">Контрастная аналогия</button>
+              <button class="btn func" onclick="showScheme('tintedComplement')">Tinted Complement</button>
             </div>
+          </div>
         </div>
-    </div>
 
-    <!-- Вспомогательные -->
-    <div class="accordion-section">
-        <div class="accordion-header" onclick="toggleAccordion('utilitySchemes')">
+        <div class="accordion-section">
+          <div class="accordion-header" onclick="toggleAccordion('utilitySchemes')">
             <h3>Вспомогательные</h3>
             <span class="accordion-arrow">▼</span>
-        </div>
-        <div id="utilitySchemes" class="accordion-content">
+          </div>
+          <div id="utilitySchemes" class="accordion-content">
             <div class="controls-group">
-                <button class="btn func" onclick="showScheme('alsoGood')">Подходящие</button>
-                <button class="btn func" onclick="showScheme('notGood')">Неподходящие</button>
+              <button class="btn func" onclick="showScheme('alsoGood')">Подходящие</button>
+              <button class="btn func" onclick="showScheme('notGood')">Неподходящие</button>
             </div>
-        </div>
-    </div>
-</div>
-
-  
-  <!-- Контейнер для подсказки -->
-  <div id="schemeGuide" class="out" style="margin-top:10px;">—</div>
-
-  
-
-<!-- Фильтры -->
-<div class="controls filter-section">
-  <div class="filter-header" onclick="toggleFilter(this)">
-    <strong>Фильтр по стилю</strong>
-    <span class="filter-toggle">▼</span>
-  </div>
-  <div class="filter-content">
- <select onchange="setFilter('style', this.value)">
-  <option value="">— Все стили —</option>
-  <option value="деловой">Деловой</option>
-  <option value="романтичный">Романтичный</option>
-  <option value="нежный">Нежный</option>
-  <option value="повседневный">Повседневный</option>
-  <option value="вечерний">Вечерний</option>
-  <option value="драматичный">Драматичный</option>
-  <option value="универсальный">Универсальный</option>
-  <option value="свежий">Свежий</option>
-  <option value="яркий">Яркий</option>
-</select>
-
-
-<div class="controls filter-section">
-  <div class="filter-header" onclick="toggleFilter(this)">
-    <strong>Фильтр по сезону</strong>
-    <span class="filter-toggle">▼</span>
-  </div>
-  <div class="filter-content">
-    <select onchange="setFilter('season', this.value)">
-      <option value="">— Все сезоны —</option>
-      <option value="весна">Весна</option>
-      <option value="лето">Лето</option>
-      <option value="осень">Осень</option>
-      <option value="зима">Зима</option>
-    </select>
-  </div>
-</div>
-
-<!-- Кнопка сброса фильтров -->
-<div class="controls">
-  <button class="btn wide" onclick="resetFilters()">Сбросить все фильтры</button>
-
-   
-</div>
-</section>
-
-<!-- Конвертер единиц -->
-<section class="tab-page" id="unitConverter">
-  <div class="panel">
-    <h2>🎯 Конвертер единиц</h2>
-    <div class="converter-form">
-      <div class="form-group">
-        <label for="category">Категория:</label>
-        <select id="category" class="text-input">
-          <option value="temperature">🌡️ Температура</option>
-          <option value="mass">⚖️ Масса</option>
-          <option value="length">📏 Длина</option>
-          <option value="area">🟦 Площадь</option>
-          <option value="volume">🥛 Объём (кулинарный)</option>
-          <option value="cubic">🧊 Кубические единицы</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="fromUnit">Из:</label>
-          <select id="fromUnit" class="text-input"></select>
-        </div>
-        <div class="form-group">
-          <label for="toUnit">В:</label>
-          <select id="toUnit" class="text-input"></select>
+          </div>
         </div>
       </div>
-      <div class="form-group">
-        <label for="valueInput">Значение:</label>
-        <input id="valueInput" type="number" class="num-input" placeholder="Введите число">
-      </div>
-      <button id="convertBtn" class="btn wide">🔄 Перевести</button>
-      <div id="convertResult" class="result-box">—</div>
-    </div>
-  </div>
-</section>
 
-<!-- Калькулятор дней -->
-<section class="tab-page" id="daysCalc" style="display:none;">
-  <div class="panel">
-    <h2>📅 Калькулятор дней</h2>
-    <div class="converter-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="startDate">Дата начала:</label>
-          <input type="date" id="startDate" class="text-input">
+      <div id="schemeGuide" class="out" style="margin-top:10px;">—</div>
+
+      <!-- Фильтры -->
+      <div class="controls filter-section">
+        <div class="filter-header" onclick="toggleFilter(this)">
+          <strong>Фильтр по стилю</strong>
+          <span class="filter-toggle">▼</span>
         </div>
-        <div class="form-group">
-          <label for="endDate">Дата окончания:</label>
-          <input type="date" id="endDate" class="text-input">
+        <div class="filter-content">
+          <select onchange="setFilter('style', this.value)">
+            <option value="">— Все стили —</option>
+            <option value="деловой">Деловой</option>
+            <option value="романтичный">Романтичный</option>
+            <option value="нежный">Нежный</option>
+            <option value="повседневный">Повседневный</option>
+            <option value="вечерний">Вечерний</option>
+            <option value="драматичный">Драматичный</option>
+            <option value="универсальный">Универсальный</option>
+            <option value="свежий">Свежий</option>
+            <option value="яркий">Яркий</option>
+          </select>
         </div>
       </div>
-      <button id="calcDaysBtn" class="btn wide">📊 Рассчитать</button>
-      <div class="hint">
-        Считает календарные и рабочие дни между выбранными датами.<br>
-        Рабочие дни учитывают выходные и официальные праздники РФ.
+
+      <div class="controls filter-section">
+        <div class="filter-header" onclick="toggleFilter(this)">
+          <strong>Фильтр по сезону</strong>
+          <span class="filter-toggle">▼</span>
+        </div>
+        <div class="filter-content">
+          <select onchange="setFilter('season', this.value)">
+            <option value="">— Все сезоны —</option>
+            <option value="весна">Весна</option>
+            <option value="лето">Лето</option>
+            <option value="осень">Осень</option>
+            <option value="зима">Зима</option>
+          </select>
+        </div>
       </div>
-      <div id="daysResult" class="result-box">—
-</div>
-  </div>
-</section>
 
-<!-- Правила -->
-<section class="tab-page" id="rules">
-  <div class="panel">
-    <h2>Математические правила</h2>
+      <div class="controls">
+        <button class="btn wide" onclick="resetFilters()">Сбросить все фильтры</button>
+      </div>
+    </section>
 
-    <!-- Поиск -->
-    <input id="searchRuleInput" type="text" class="text-input" placeholder="Введите ключевое слово...">
-    <button id="searchRuleBtn" class="btn wide">Найти</button>
+    <!-- Конвертер единиц -->
+    <section class="tab-page" id="unitConverter">
+      <div class="panel">
+        <h2>🎯 Конвертер единиц</h2>
+        <div class="converter-form">
+          <div class="form-group">
+            <label for="category">Категория:</label>
+            <select id="category" class="text-input">
+              <option value="temperature">🌡️ Температура</option>
+              <option value="mass">⚖️ Масса</option>
+              <option value="length">📏 Длина</option>
+              <option value="area">🟦 Площадь</option>
+              <option value="volume">🥛 Объём (кулинарный)</option>
+              <option value="cubic">🧊 Кубические единицы</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fromUnit">Из:</label>
+              <select id="fromUnit" class="text-input"></select>
+            </div>
+            <div class="form-group">
+              <label for="toUnit">В:</label>
+              <select id="toUnit" class="text-input"></select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="valueInput">Значение:</label>
+            <input id="valueInput" type="number" class="num-input" placeholder="Введите число">
+          </div>
+          <button id="convertBtn" class="btn wide">🔄 Перевести</button>
+          <div id="convertResult" class="result-box">—</div>
+        </div>
+      </div>
+    </section>
 
-    <!-- Категории -->
-    <div id="rulesContent">
-      <h3>Алгебра</h3>
-      <ul id="rulesAlgebra">
-        <li>(a+b)² = a² + 2ab + b²</li>
-        <li>(a−b)² = a² − 2ab + b²</li>
-        <li>(a+b)(a−b) = a² − b²</li>
-        <li>ax²+bx+c=0, D=b²−4ac</li>
-      </ul>
+    <!-- Правила -->
+    <section class="tab-page" id="rules">
+      <div class="panel">
+        <h2>Математические правила</h2>
+        <input id="searchRuleInput" type="text" class="text-input" placeholder="Введите ключевое слово...">
+        <button id="searchRuleBtn" class="btn wide">Найти</button>
+        <div id="rulesContent">
+          <h3>Алгебра</h3>
+          <ul id="rulesAlgebra">
+            <li>(a+b)² = a² + 2ab + b²</li>
+            <li>(a−b)² = a² − 2ab + b²</li>
+            <li>(a+b)(a−b) = a² − b²</li>
+            <li>ax²+bx+c=0, D=b²−4ac</li>
+          </ul>
 
-      <h3>Тригонометрия</h3>
-      <ul id="rulesTrig">
-        <li>sin²x + cos²x = 1</li>
-        <li>tanx = sinx/cosx</li>
-        <li>sin(2x) = 2sinx·cosx</li>
-        <li>cos(2x) = cos²x − sin²x</li>
-      </ul>
+          <h3>Тригонометрия</h3>
+          <ul id="rulesTrig">
+            <li>sin²x + cos²x = 1</li>
+            <li>tanx = sinx/cosx</li>
+            <li>sin(2x) = 2sinx·cosx</li>
+            <li>cos(2x) = cos²x − sin²x</li>
+          </ul>
 
-      <h3>Логарифмы</h3>
-      <ul id="rulesLog">
-        <li>logₐ1 = 0</li>
-        <li>logₐa = 1</li>
-        <li>logₐ(bc) = logₐb + logₐc</li>
-        <li>logₐ(b/c) = logₐb − logₐc</li>
-      </ul>
+          <h3>Логарифмы</h3>
+          <ul id="rulesLog">
+            <li>logₐ1 = 0</li>
+            <li>logₐa = 1</li>
+            <li>logₐ(bc) = logₐb + logₐc</li>
+            <li>logₐ(b/c) = logₐb − logₐc</li>
+          </ul>
 
-      <h3>Производные</h3>
-      <ul id="rulesDerivatives">
-        <li>(xⁿ)' = n·xⁿ⁻¹</li>
-        <li>(sinx)' = cosx</li>
-        <li>(cosx)' = −sinx</li>
-        <li>(e^x)' = e^x</li>
-      </ul>
+          <h3>Производные</h3>
+          <ul id="rulesDerivatives">
+            <li>(xⁿ)' = n·xⁿ⁻¹</li>
+            <li>(sinx)' = cosx</li>
+            <li>(cosx)' = −sinx</li>
+            <li>(e^x)' = e^x</li>
+          </ul>
 
-      <h3>Интегралы</h3>
-      <ul id="rulesIntegrals">
-        <li>∫xⁿ dx = xⁿ⁺¹/(n+1) + C</li>
-        <li>∫1/x dx = ln|x| + C</li>
-        <li>∫sinx dx = −cosx + C</li>
-        <li>∫cosx dx = sinx + C</li>
-      </ul>
+          <h3>Интегралы</h3>
+          <ul id="rulesIntegrals">
+            <li>∫xⁿ dx = xⁿ⁺¹/(n+1) + C</li>
+            <li>∫1/x dx = ln|x| + C</li>
+            <li>∫sinx dx = −cosx + C</li>
+            <li>∫cosx dx = sinx + C</li>
+          </ul>
 
-     <h3>Геометрия</h3>
-<ul id="rulesGeometry">
-  <li>S прямоугольника = a·b</li>
-  <li>S треугольника = ½·a·h</li>
-  <li>S круга = πr²</li>
-  <li>Длина окружности = 2πr</li>
-  <li>Теорема Пифагора: a²+b²=c²</li>
-  <li>Формула Герона: S=√(p(p−a)(p−b)(p−c)), p=(a+b+c)/2</li>
-  <li>S поверхности шара = 4πr²</li>
-  <li>V шара = 4/3·πr³</li>
-  <li>V куба = a³</li>
-  <li>V цилиндра = πr²h</li>
-  <li>V конуса = ⅓·πr²h</li>
-  <li>V пирамиды = ⅓·Sосн·h</li>
-</ul>
+          <h3>Геометрия</h3>
+          <ul id="rulesGeometry">
+            <li>S прямоугольника = a·b</li>
+            <li>S треугольника = ½·a·h</li>
+            <li>S круга = πr²</li>
+            <li>Длина окружности = 2πr</li>
+            <li>Теорема Пифагора: a²+b²=c²</li>
+            <li>Формула Герона: S=√(p(p−a)(p−b)(p−c)), p=(a+b+c)/2</li>
+            <li>S поверхности шара = 4πr²</li>
+            <li>V шара = 4/3·πr³</li>
+            <li>V куба = a³</li>
+            <li>V цилиндра = πr²h</li>
+            <li>V конуса = ⅓·πr²h</li>
+            <li>V пирамиды = ⅓·Sосн·h</li>
+          </ul>
 
-      <h3>Комбинаторика и вероятность</h3>
-      <ul id="rulesCombinatorics">
-        <li>n! = 1·2·3·...·n</li>
-        <li>Aₙᵏ = n!/(n−k)!</li>
-        <li>Cₙᵏ = n!/(k!(n−k)!)</li>
-        <li>P(A) = m/n</li>
-      </ul>
-    </div>
-  </div>
-</section>
+          <h3>Комбинаторика и вероятность</h3>
+          <ul id="rulesCombinatorics">
+            <li>n! = 1·2·3·...·n</li>
+            <li>Aₙᵏ = n!/(n−k)!</li>
+            <li>Cₙᵏ = n!/(k!(n−k)!)</li>
+            <li>P(A) = m/n</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
     <!-- История -->
     <section class="tab-page" id="history">
       <div class="panel">
         <h2>История вычислений</h2>
         <button id="clearHistoryBtn" class="btn wide">Очистить историю</button>
-               <ul id="historyList" class="history-list"></ul>
-       
+        <ul id="historyList" class="history-list"></ul>
       </div>
     </section>
 
+    <!-- Физика -->
+    <section class="tab-page" id="physics">
+      <div class="panel">
+        <h2>Формулы по физике</h2>
+        <input id="searchPhysicsInput" type="text" class="text-input" placeholder="Введите ключевое слово...">
+        <button id="searchPhysicsBtn" class="btn wide">Найти</button>
+        <div id="physicsContent">
+          <h3>Кинематика</h3>
+          <ul>
+            <li>Перемещение: S = v · t</li>
+            <li>Ускорение: a = Δv / Δt</li>
+            <li>Равноускоренное движение: S = v₀t + (a·t²)/2</li>
+            <li>Скорость: v = v₀ + a·t</li>
+          </ul>
 
-<!-- Физика -->
-<section class="tab-page" id="physics">
-  <div class="panel">
-    <h2>Формулы по физике</h2>
+          <h3>Динамика</h3>
+          <ul>
+            <li>Второй закон Ньютона: F = m · a</li>
+            <li>Сила тяжести: F = m · g</li>
+            <li>Импульс: p = m · v</li>
+            <li>Закон сохранения импульса: p₁ + p₂ = p′₁ + p′₂</li>
+          </ul>
 
-    <!-- Поиск -->
-    <input id="searchPhysicsInput" type="text" class="text-input" placeholder="Введите ключевое слово...">
-    <button id="searchPhysicsBtn" class="btn wide">Найти</button>
+          <h3>Статика и гидростатика</h3>
+          <ul>
+            <li>Давление: p = F / S</li>
+            <li>Закон Паскаля: давление передаётся одинаково во все стороны</li>
+            <li>Закон Архимеда: Fₐ = ρ · g · V</li>
+          </ul>
 
-    <!-- Категории -->
-    <div id="physicsContent">
+          <h3>Энергия и работа</h3>
+          <ul>
+            <li>Работа: A = F · s · cos α</li>
+            <li>Мощность: P = A / t</li>
+            <li>Кинетическая энергия: Ek = m·v² / 2</li>
+            <li>Потенциальная энергия: Ep = m·g·h</li>
+          </ul>
 
-      <h3>Кинематика</h3>
-      <ul>
-        <li>Перемещение: S = v · t</li>
-        <li>Ускорение: a = Δv / Δt</li>
-        <li>Равноускоренное движение: S = v₀t + (a·t²)/2</li>
-        <li>Скорость: v = v₀ + a·t</li>
-      </ul>
+          <h3>Термодинамика</h3>
+          <ul>
+            <li>Количество теплоты: Q = c · m · ΔT</li>
+            <li>Уравнение состояния: PV = nRT</li>
+            <li>Внутренняя энергия газа: U = 3/2 · nRT</li>
+            <li>Работа газа: A = p · ΔV</li>
+          </ul>
 
-      <h3>Динамика</h3>
-      <ul>
-        <li>Второй закон Ньютона: F = m · a</li>
-        <li>Сила тяжести: F = m · g</li>
-        <li>Импульс: p = m · v</li>
-        <li>Закон сохранения импульса: p₁ + p₂ = p′₁ + p′₂</li>
-      </ul>
+          <h3>Электричество и магнетизм</h3>
+          <ul>
+            <li>Закон Ома: I = U / R</li>
+            <li>Мощность тока: P = U · I</li>
+            <li>Закон Кулона: F = k · (q₁·q₂) / r²</li>
+            <li>Магнитная сила: F = B · I · l · sin α</li>
+          </ul>
 
-      <h3>Статика и гидростатика</h3>
-      <ul>
-        <li>Давление: p = F / S</li>
-        <li>Закон Паскаля: давление передаётся одинаково во все стороны</li>
-        <li>Закон Архимеда: Fₐ = ρ · g · V</li>
-      </ul>
+          <h3>Оптика</h3>
+          <ul>
+            <li>Закон отражения: угол падения = угол отражения</li>
+            <li>Закон преломления: n₁·sin α = n₂·sin β</li>
+            <li>Фокусное расстояние линзы: 1/f = 1/d₁ + 1/d₂</li>
+          </ul>
 
-      <h3>Энергия и работа</h3>
-      <ul>
-        <li>Работа: A = F · s · cos α</li>
-        <li>Мощность: P = A / t</li>
-        <li>Кинетическая энергия: Ek = m·v² / 2</li>
-        <li>Потенциальная энергия: Ep = m·g·h</li>
-      </ul>
+          <h3>Колебания и волны</h3>
+          <ul>
+            <li>Период колебаний маятника: T = 2π√(l/g)</li>
+            <li>Частота: ν = 1/T</li>
+            <li>Длина волны: λ = v/ν</li>
+            <li>Формула Томсона (LC‑контур): T = 2π√(L·C)</li>
+          </ul>
 
-      <h3>Термодинамика</h3>
-      <ul>
-        <li>Количество теплоты: Q = c · m · ΔT</li>
-        <li>Уравнение состояния: PV = nRT</li>
-        <li>Внутренняя энергия газа: U = 3/2 · nRT</li>
-        <li>Работа газа: A = p · ΔV</li>
-      </ul>
-
-      <h3>Электричество и магнетизм</h3>
-      <ul>
-        <li>Закон Ома: I = U / R</li>
-        <li>Мощность тока: P = U · I</li>
-        <li>Закон Кулона: F = k · (q₁·q₂) / r²</li>
-        <li>Магнитная сила: F = B · I · l · sin α</li>
-      </ul>
-
-      <h3>Оптика</h3>
-      <ul>
-        <li>Закон отражения: угол падения = угол отражения</li>
-        <li>Закон преломления: n₁·sin α = n₂·sin β</li>
-        <li>Фокусное расстояние линзы: 1/f = 1/d₁ + 1/d₂</li>
-      </ul>
-
-      <h3>Колебания и волны</h3>
-      <ul>
-        <li>Период колебаний маятника: T = 2π√(l/g)</li>
-        <li>Частота: ν = 1/T</li>
-        <li>Длина волны: λ = v/ν</li>
-        <li>Формула Томсона (LC‑контур): T = 2π√(L·C)</li>
-      </ul>
-
-      <h3>Атомная и ядерная физика</h3>
-      <ul>
-        <li>Энергия фотона: E = h · ν</li>
-        <li>Закон радиоактивного распада: N = N₀·e^(−λt)</li>
-        <li>Масса–энергия: E = m·c²</li>
-      </ul>
-
-    </div>
+          <h3>Атомная и ядерная физика</h3>
+          <ul>
+            <li>Энергия фотона: E = h · ν</li>
+            <li>Закон радиоактивного распада: N = N₀·e^(−λt)</li>
+            <li>Масса–энергия: E = m·c²</li>
+          </ul>
+        </div>
+      </div>
+    </section>
   </div>
-</section>
 
-<script src="calc.js"></script>
-<script src="equations.js"></script>
-<script src="history.js"></script>
-<script src="graph.js"></script>
-<script src="rules.js"></script>
-<script src="converter.js"></script>
-<script src="fractions.js"></script>
-<script src="physics.js"></script>
-<script src="holidays.js"></script>
-<script src="daysCalc.js"></script>
-<script src="equationsAndColors.js"></script>
-<script src="main.js"></script>
+  <!-- СКРИПТЫ: порядок критически важен! -->
+  <script src="fractions.js"></script>        <!-- 1. Fraction (глобальный) -->
+  <script src="calc.js"></script>             <!-- 2. Основной калькулятор -->
+  <script src="equations.js"></script>
+  <script src="history.js"></script>
+  <script src="graph.js"></script>
+  <script src="rules.js"></script>
+  <script src="converter.js"></script>
+  <script src="physics.js"></script>
+  <script src="holidays.js"></script>
+  <script src="daysCalc.js"></script>
+  <script src="equationsAndColors.js"></script>
+  <script src="main.js"></script>
+  <script src="stylistWheel.js?v=1"></script>
+  <script src="tabs.js?v=1"></script>
 
-<!-- подключение стилистического круга -->
-
-<script src="stylistWheel.js?v=1"></script>
-<script src="tabs.js?v=1"></script>
-
-<!-- регистрация service worker -->
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
-</script>
+  <!-- Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js');
+      });
+    }
+  </script>
 </body>
 </html>
