@@ -1,347 +1,375 @@
-// ================== Класс дробей ==================
-function gcd(a, b) { return b ? gcd(b, a % b) : a; }
+// calc.js — безопасный калькулятор без eval, с поддержкой дробей и научных функций
 
-class Fraction {
-  constructor(num, den = 1) {
-    if (den === 0) throw new Error("Знаменатель не может быть равен 0");
-    this.num = num;
-    this.den = den;
-    this.reduce();
-  }
-  reduce() {
-    const g = gcd(Math.abs(this.num), Math.abs(this.den));
-    this.num /= g;
-    this.den /= g;
-    if (this.den < 0) { this.num *= -1; this.den *= -1; }
-  }
-  add(f) { return new Fraction(this.num * f.den + f.num * this.den, this.den * f.den); }
-  sub(f) { return new Fraction(this.num * f.den - f.num * this.den, this.den * f.den); }
-  mul(f) { return new Fraction(this.num * f.num, this.den * f.den); }
-  div(f) { return new Fraction(this.num * f.den, this.den * f.num); }
-  toString() { return this.den === 1 ? `${this.num}` : `${this.num}/${this.den}`; }
-  toDecimal() { return this.num / this.den; }
-}
+document.addEventListener('DOMContentLoaded', () => {
+  // === Глобальное состояние ===
+  let currentInput = "";
+  let memoryValue = 0;
+  let history = [];
+  let roundingMode = "fixed";     // "fixed" | "scientific" | "precise"
+  let roundingDigits = 6;
 
-// ================== Экран, память и история ==================
-const display = document.getElementById("display");
-let currentInput = "";
-let memoryValue = 0;
-let history = [];
-
-function updateDisplay(val) { display.textContent = val; }
-
-function renderHistory() {
+  // === DOM элементы ===
+  const display = document.getElementById("display");
+  const toggleSciBtn = document.getElementById("toggleSciBtn");
+  const sciFunctions = document.getElementById("sciFunctions");
+  const clearHistoryBtn = document.getElementById("clearHistoryBtn");
   const historyList = document.getElementById("historyList");
-  if (!historyList) return;
-  historyList.innerHTML = history.map(item => `<li>${item}</li>`).join("");
-}
 
-function addToHistory(expr, res) {
-  history.unshift(`${expr} → ${res}`);
-  if (history.length > 10) history.pop();
-  renderHistory();
-}
-
-function clearHistory() { history = []; renderHistory(); }
-document.getElementById("clearHistoryBtn").addEventListener("click", clearHistory);
-
-// ================== Настройки округления ==================
-let roundingMode = "fixed";     // "fixed" | "scientific" | "precise"
-let roundingDigits = 6;         // количество знаков
-
-// ================== Форматирование десятичной части ==================
-function formatDecimal(value) {
-  if (Number.isInteger(value)) return String(value);
-
-  if (roundingMode === "fixed") {
-    return Number(value).toFixed(roundingDigits);
+  // === Вспомогательные функции ===
+  function updateDisplay(val) {
+    display.textContent = val === "" ? "0" : val;
   }
-  if (roundingMode === "scientific") {
-    const prec = Number(value).toPrecision(roundingDigits);
-    return Number(prec).toExponential(Math.max(0, roundingDigits - 1));
+
+  function renderHistory() {
+    if (historyList) {
+      historyList.innerHTML = history.map(item => `<li>${item}</li>`).join("");
+    }
   }
-  return String(value); // precise
-}
 
-// ================== Форматирование результата дроби ==================
-function formatFractionResult(frac) {
-  const decimal = frac.toDecimal();
-  const decimalStr = formatDecimal(decimal);
-  const exact = frac.toString();
-  return `${decimalStr} ≈ ${exact}`;
-}
+  function addToHistory(expr, res) {
+    if (res === "Ошибка") return;
+    history.unshift(`${expr} = ${res}`);
+    if (history.length > 10) history.pop();
+    renderHistory();
+  }
 
-// ================== Парсер выражений ==================
-function calculateExpression(expr) {
-  try {
-    expr = String(expr || "").trim();
-    if (!expr) return "0";
+  function clearHistory() {
+    history = [];
+    renderHistory();
+  }
 
-    expr = expr.replace(/\^/g, "**");
+  function formatDecimal(value) {
+    if (typeof value !== 'number' || !isFinite(value)) return "Ошибка";
+    if (Number.isInteger(value)) return String(value);
+    if (roundingMode === "fixed") {
+      return value.toFixed(roundingDigits);
+    }
+    if (roundingMode === "scientific") {
+      return value.toExponential(Math.max(0, roundingDigits - 1));
+    }
+    return String(value);
+  }
 
-    // единицы площади
-    if (/^\d+(\.\d+)?\s*cm2$/i.test(expr)) {
-      const val = parseFloat(expr);
-      const res = `${val} см² = ${(val / 10000).toFixed(4)} м²`;
-      addToHistory(expr, res);
+  function formatFractionResult(frac) {
+    const decimal = frac.toDecimal();
+    const decimalStr = formatDecimal(decimal);
+    const exact = frac.toString();
+    return `${decimalStr} ≈ ${exact}`;
+  }
+
+  // === Безопасные математические функции ===
+  const mathFunctions = {
+    sin: x => Math.sin(x),
+    cos: x => Math.cos(x),
+    tan: x => Math.tan(x),
+    asin: x => Math.asin(x),
+    acos: x => Math.acos(x),
+    atan: x => Math.atan(x),
+    sinh: x => Math.sinh(x),
+    cosh: x => Math.cosh(x),
+    tanh: x => Math.tanh(x),
+    sqrt: x => Math.sqrt(x),
+    log10: x => Math.log10(x),
+    ln: x => Math.log(x),
+    log2: x => Math.log2(x),
+    exp: x => Math.exp(x),
+    abs: x => Math.abs(x),
+    ceil: x => Math.ceil(x),
+    floor: x => Math.floor(x),
+    round: x => Math.round(x),
+    factorial: x => {
+      if (x < 0 || !Number.isInteger(x)) return NaN;
+      let res = 1;
+      for (let i = 2; i <= x; i++) res *= i;
       return res;
     }
-    if (/^\d+(\.\d+)?\s*m2$/i.test(expr)) {
-      const val = parseFloat(expr);
-      const res = `${val} м² = ${(val * 10000).toFixed(0)} см²`;
-      addToHistory(expr, res);
-      return res;
+  };
+
+  // === Простой вычислитель выражений (без скобок и функций) ===
+  function evaluateSimple(expr) {
+    try {
+      expr = expr.trim().replace(/\s+/g, "");
+      if (!expr) return 0;
+
+      expr = expr
+        .replace(/\+\-/g, "-")
+        .replace(/\-\+/g, "-")
+        .replace(/\-\-/g, "+")
+        .replace(/\+\+/g, "+");
+
+      const tokens = [];
+      let current = "";
+      for (let char of expr) {
+        if ("+-*/".includes(char)) {
+          if (current !== "") tokens.push(current);
+          tokens.push(char);
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+      if (current !== "") tokens.push(current);
+
+      if (tokens.length === 0) return 0;
+      if (tokens.length === 1) return parseFloat(tokens[0]);
+
+      if (tokens[0] === "+" || tokens[0] === "-") {
+        tokens[1] = tokens[0] + tokens[1];
+        tokens.shift();
+      }
+
+      // * и /
+      let i = 1;
+      while (i < tokens.length) {
+        if (tokens[i] === "*") {
+          tokens[i - 1] = parseFloat(tokens[i - 1]) * parseFloat(tokens[i + 1]);
+          tokens.splice(i, 2);
+        } else if (tokens[i] === "/") {
+          const d = parseFloat(tokens[i + 1]);
+          if (d === 0) return NaN;
+          tokens[i - 1] = parseFloat(tokens[i - 1]) / d;
+          tokens.splice(i, 2);
+        } else {
+          i += 2;
+        }
+      }
+
+      // + и -
+      let result = parseFloat(tokens[0]);
+      for (let j = 1; j < tokens.length; j += 2) {
+        const op = tokens[j];
+        const num = parseFloat(tokens[j + 1]);
+        if (op === "+") result += num;
+        else if (op === "-") result -= num;
+        else return NaN;
+      }
+      return result;
+    } catch (e) {
+      return NaN;
     }
-
-    const hasProperFractions = /\b\d+\s*\/\s*\d+\b/.test(expr);
-    if (!hasProperFractions) {
-      const jsExpr = expr.replace(/÷/g, "/");
-      const numResult = (new Function("return " + jsExpr))();
-      const res = formatDecimal(numResult);
-      addToHistory(expr, res);
-      return res;
-    }
-
-    const frac = evaluateFractionExpression(expr);
-    const res = formatFractionResult(frac);
-    addToHistory(expr, res);
-    return res;
-
-  } catch {
-    return "Ошибка";
-  }
-}
-
-function evaluateFractionExpression(expr) {
-  expr = String(expr || "").trim();
-
-  // обработка скобок: каждое выражение внутри скобок вычисляем рекурсивно
-while (expr.includes("(")) {
-  const before = expr;
-  expr = expr.replace(/\([^()]+\)/g, (sub) => {
-    const inner = sub.slice(1, -1).trim();
-    const f = evaluateFractionExpression(inner);
-    // возвращаем строку вида "числитель/знаменатель"
-    return f.num + "/" + f.den;
-  });
-  if (expr === before) break;
-}
-
-
-  // нормализация строки
-  expr = expr.replace(/\s+/g, "")
-             .replace(/\+\-/g, "-")
-             .replace(/\-\+/g, "-")
-             .replace(/\-\-/g, "+")
-             .replace(/\+\+/g, "+")
-             .replace(/÷/g, "/");
-
-  // разбиваем по операторам + - * /
-  const raw = expr.split(/([+\-*\/])/).filter(t => t.length);
-
-  const tokens = [];
-  for (let i = 0; i < raw.length; i++) {
-    const t = raw[i];
-    // обработка унарных + и -
-    if ((t === "+" || t === "-") && (i === 0 || /[+\-*\/]/.test(raw[i - 1]))) {
-      const next = raw[i + 1];
-      tokens.push(t + next);
-      i++;
-    } else {
-      tokens.push(t);
-    }
-  }
-
-  if (tokens.length === 0) return new Fraction(0, 1);
-
-  let result = parseTokenToFraction(tokens[0]);
-
-  for (let i = 1; i < tokens.length; i += 2) {
-    const op = tokens[i];
-    const right = parseTokenToFraction(tokens[i + 1]);
-
-    if (op === "+") result = result.add(right);
-    else if (op === "-") result = result.sub(right);
-    else if (op === "*") result = result.mul(right);
-    else if (op === "/") result = result.div(right);
-    else throw new Error("Неизвестный оператор: " + op);
   }
 
-  return result;
-}
+  // === Рекурсивный вычислитель с функциями и скобками ===
+  function safeEvaluate(expr) {
+    expr = expr.trim();
+    if (!expr) return 0;
 
+    expr = expr
+      .replace(/÷/g, "/")
+      .replace(/\^/g, "**")
+      .replace(/π/g, "pi")
+      .replace(/\bpi\b/g, String(Math.PI))
+      .replace(/\be\b/g, String(Math.E));
 
-function parseTokenToFraction(str) {
-  const s = String(str).trim();
-  if (s === "") throw new Error("Пустой токен");
+    let changed;
+    do {
+      changed = false;
+      // Функции: sin(1.57) → 1
+      expr = expr.replace(/\b([a-z]+)\(([^()]*)\)/g, (match, fn, argStr) => {
+        if (!mathFunctions[fn]) return match;
+        changed = true;
+        const arg = parseFloat(argStr);
+        if (!isFinite(arg)) return "NaN";
+        const res = mathFunctions[fn](arg);
+        return isFinite(res) ? String(res) : "NaN";
+      });
 
-  if (!s.includes("/")) {
-    const n = Number(s);
-    if (!Number.isFinite(n)) throw new Error("Некорректное число: " + s);
-    return new Fraction(n, 1);
+      // Скобки: (2+3) → 5
+      expr = expr.replace(/\(([^()]*)\)/g, (match, inner) => {
+        changed = true;
+        const res = safeEvaluate(inner);
+        return isFinite(res) ? String(res) : "NaN";
+      });
+    } while (changed && expr.includes("("));
+
+    const result = evaluateSimple(expr);
+    return result;
   }
 
-  const parts = s.split("/");
-  if (parts.length !== 2) throw new Error("Некорректная дробь: " + s);
-  const n = Number(parts[0]);
-  const d = Number(parts[1]);
-  if (!Number.isFinite(n) || !Number.isFinite(d)) throw new Error("Некорректная дробь: " + s);
-  return new Fraction(n, d);
-}
-
-// ================== Привязка кнопок округления ==================
-document.querySelectorAll(".btn[data-func]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const func = btn.dataset.func;
-    if (func === "fixed2") {
-      roundingMode = "fixed";
-      roundingDigits = 2;
-    } else if (func === "fixed6") {
-      roundingMode = "fixed";
-      roundingDigits = 6;
-    } else if (func === "sci") {
-      roundingMode = "scientific";
-      roundingDigits = 6;
-    } else if (func === "precise") {
-      roundingMode = "precise";
+  // === Парсер дробей (если Fraction доступен) ===
+  function evaluateFractionExpression(expr) {
+    if (typeof window.Fraction !== 'function') {
+      throw new Error("Fraction не определён");
     }
-    if (currentInput) {
-      updateDisplay(calculateExpression(currentInput));
-    }
-  });
-});
 
-// ================== Научные функции ==================
-function factorial(n) {
-  if (n < 0) return NaN;
-  let res = 1;
-  for (let i = 2; i <= n; i++) res *= i;
-  return res;
-}
+    expr = expr.trim()
+      .replace(/\s+/g, "")
+      .replace(/÷/g, "/");
 
-function applyFunction(func, value) {
-  switch(func) {
-    case "sqrt": return Math.sqrt(value);
-    case "square": return Math.pow(value, 2);
-    case "cube": return Math.pow(value, 3);
-    case "factorial": return factorial(value);
-    case "sin": return Math.sin(value);
-    case "cos": return Math.cos(value);
-    case "tan": return Math.tan(value);
-    case "asin": return Math.asin(value);
-    case "acos": return Math.acos(value);
-    case "atan": return Math.atan(value);
-    case "sinh": return Math.sinh(value);
-    case "cosh": return Math.cosh(value);
-    case "tanh": return Math.tanh(value);
-    case "abs": return Math.abs(value);
-    case "round": return Math.round(value);
-    case "floor": return Math.floor(value);
-    case "ceil": return Math.ceil(value);
-    case "log10": return Math.log10(value);
-    case "ln": return Math.log(value);
-    case "log2": return Math.log2(value);
-    case "exp": return Math.exp(value);
-    case "percent": return value / 100;
-    case "fixed2": return parseFloat(value.toFixed(2));
-    case "fixed6": return parseFloat(value.toFixed(6));
-    case "sci": {
-      const num = Number(value);
-      return (num >= 1e6 || num <= 1e-6) ? num.toExponential(6) : num.toString();
+    // Обработка скобок
+    while (expr.includes("(")) {
+      let changed = false;
+      expr = expr.replace(/\([^()]+\)/g, (sub) => {
+        const inner = sub.slice(1, -1);
+        const frac = evaluateFractionExpression(inner);
+        changed = true;
+        return `${frac.num}/${frac.den}`;
+      });
+      if (!changed) break;
     }
-    case "precise": return Number(value).toPrecision(15);
-    default: return value;
+
+    const raw = expr.split(/([+\-*\/])/).filter(t => t);
+    const tokens = [];
+    for (let i = 0; i < raw.length; i++) {
+      const t = raw[i];
+      if ((t === "+" || t === "-") && (i === 0 || /[+\-*\/]/.test(raw[i - 1]))) {
+        tokens.push(t + (raw[i + 1] || "0"));
+        i++;
+      } else {
+        tokens.push(t);
+      }
+    }
+
+    if (tokens.length === 0) return new Fraction(0);
+    let result = parseTokenToFraction(tokens[0]);
+    for (let i = 1; i < tokens.length; i += 2) {
+      const op = tokens[i];
+      const right = parseTokenToFraction(tokens[i + 1]);
+      if (op === "+") result = result.add(right);
+      else if (op === "-") result = result.sub(right);
+      else if (op === "*") result = result.mul(right);
+      else if (op === "/") result = result.div(right);
+      else throw new Error("Неизвестный оператор");
+    }
+    return result;
   }
-}
 
-// ================== Обработка кнопок ==================
-document.querySelectorAll("#calc .btn").forEach(btn => {
-  btn.addEventListener("click", () => {
+  function parseTokenToFraction(str) {
+    if (str.includes("/")) {
+      const [n, d] = str.split("/");
+      return new Fraction(parseFloat(n), parseFloat(d));
+    }
+    return new Fraction(parseFloat(str));
+  }
+
+  // === Основная функция вычисления ===
+  function calculateExpression(expr) {
+    try {
+      expr = (expr || "").trim();
+      if (!expr) return "0";
+
+      // Проверка на дробь: содержит "a/b", но не "log2(" и т.п.
+      const hasFraction = /(?<!\w)\d+\s*\/\s*\d+(?!\w)/.test(expr);
+
+      if (hasFraction && typeof window.Fraction === 'function') {
+        const frac = evaluateFractionExpression(expr);
+        return formatFractionResult(frac);
+      }
+
+      const numResult = safeEvaluate(expr);
+      if (!isFinite(numResult)) throw new Error("Недопустимый результат");
+      return formatDecimal(numResult);
+
+    } catch (e) {
+      return "Ошибка";
+    }
+  }
+
+  // === Обработка кнопок ===
+  function handleButtonClick(btn) {
     const val = btn.dataset.value;
     const func = btn.dataset.func;
 
-    // память
+    // Память
     if (btn.classList.contains("memory")) {
+      const num = parseFloat(currentInput || "0") || 0;
       switch (func) {
-        case "MC": memoryValue = 0; break;
-        case "MR": currentInput = memoryValue.toString(); updateDisplay(currentInput); break;
-        case "M+": memoryValue += parseFloat(currentInput || "0"); break;
-        case "M-": memoryValue -= parseFloat(currentInput || "0"); break;
+        case "MC": memoryValue = 0; return;
+        case "MR": currentInput = String(memoryValue); updateDisplay(currentInput); return;
+        case "M+": memoryValue += num; return;
+        case "M-": memoryValue -= num; return;
       }
-      return;
     }
 
-    // "="
+    // Равно
     if (btn.classList.contains("equal")) {
-      const expr = currentInput.trim() || display.textContent.trim() || "0";
-      const result = calculateExpression(expr);
-      display.textContent = `${expr} = ${result}`;
-      currentInput = result.includes("≈") ? result.split(" ≈ ")[0] : result;
-
-      // сохраняем в историю максимум 10 последних
-      history.push(`${expr} = ${result}`);
-      if (history.length > 10) {
-        history.shift();
-      }
-      renderHistory();
-
-      return; // ← важно
+      if (!currentInput.trim()) return;
+      const result = calculateExpression(currentInput);
+      addToHistory(currentInput, result);
+      display.textContent = result.includes("≈") ? result : `${currentInput} = ${result}`;
+      currentInput = result;
+      return;
     }
 
-    // функции
-    if (func) {
-      const num = parseFloat(currentInput || "0");
-      const result = applyFunction(func, num);
-      currentInput = result.toString();
+    // Научные функции
+    const sciFuncs = ["sin","cos","tan","asin","acos","atan","sinh","cosh","tanh","sqrt","log10","ln","log2","exp","abs","ceil","floor","round","factorial"];
+    if (func && sciFuncs.includes(func)) {
+      currentInput += func + '(';
       updateDisplay(currentInput);
       return;
     }
 
-    // константы
+    // Константы
     if (btn.classList.contains("const")) {
-      if (val === "pi") currentInput += "*" + Math.PI;
-      if (val === "e") currentInput += "*" + Math.E;
+      const last = currentInput.slice(-1);
+      const needsMult = last !== '' && !"+-*/(".includes(last);
+      currentInput += (needsMult ? "*" : "") + (val === "pi" ? "pi" : "e");
       updateDisplay(currentInput);
       return;
     }
 
-        // смена знака
+    // Смена знака
     if (btn.classList.contains("sign")) {
       currentInput = String(-parseFloat(currentInput || "0"));
       updateDisplay(currentInput);
       return;
     }
 
-    // backspace
+    // Backspace
     if (btn.classList.contains("backspace")) {
       currentInput = currentInput.slice(0, -1);
-      updateDisplay(currentInput || "0");
+      updateDisplay(currentInput);
       return;
     }
 
-    // очистка
+    // Очистка
     if (btn.classList.contains("clear")) {
       currentInput = "";
       updateDisplay("0");
       return;
     }
 
-    // добавление символа
-    if (val) {
+    // Округление
+    if (func === "fixed2") { roundingMode = "fixed"; roundingDigits = 2; }
+    else if (func === "fixed6") { roundingMode = "fixed"; roundingDigits = 6; }
+    else if (func === "sci") { roundingMode = "scientific"; roundingDigits = 6; }
+    else if (func === "precise") { roundingMode = "precise"; }
+    else if (val) {
       currentInput += val;
       updateDisplay(currentInput);
       return;
     }
+
+    // Применить округление к текущему результату
+    if (["fixed2","fixed6","sci","precise"].includes(func) && currentInput) {
+      const expr = currentInput;
+      const result = calculateExpression(expr);
+      addToHistory(expr, result);
+      display.textContent = result;
+      current = result;
+    }
+  }
+
+  // === Инициализация обработчиков ===
+  document.querySelectorAll("#calc .btn").forEach(btn => {
+    btn.addEventListener("click", () => handleButtonClick(btn));
   });
-});
 
-// переключатель научных функций
-document.getElementById("toggleSciBtn").addEventListener("click", () => {
-  const sciBlock = document.getElementById("sciFunctions");
-  sciBlock.classList.toggle("hidden");
+  // === Научные функции: переключатель ===
+  if (toggleSciBtn && sciFunctions) {
+    toggleSciBtn.addEventListener("click", () => {
+      sciFunctions.classList.toggle("hidden");
+      toggleSciBtn.textContent = sciFunctions.classList.contains("hidden")
+        ? "Научные функции ⬇"
+        : "Научные функции ⬆";
+    });
+  }
 
-  const btn = document.getElementById("toggleSciBtn");
-  btn.textContent = sciBlock.classList.contains("hidden")
-    ? "Научные функции ⬇"
-    : "Научные функции ⬆";
+  // === История ===
+  if (clearHistoryBtn) {
+    clearHistoryBtn.addEventListener("click", clearHistory);
+  }
+
+  // === Старт ===
+  updateDisplay("0");
 });
